@@ -1,4 +1,4 @@
-A contacts App listing all contacts on the device; allowing the user to call or text the contacts; with a search featur to help finding among them.
+A contacts App listing all contacts on the device; allowing the user to call or text the contacts; with a search feature to help finding among them.
 
 App Structure :
 
