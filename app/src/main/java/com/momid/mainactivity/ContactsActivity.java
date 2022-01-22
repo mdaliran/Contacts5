@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.SearchView;
 
 import com.momid.mainactivity.data_model.Contact;
+import com.momid.mainactivity.databinding.ActivityContactsBinding;
 import com.momid.mainactivity.recycler_adapter.ContactsAdapter;
 import com.momid.mainactivity.response_model.ContactsListResponse;
 
@@ -39,6 +40,7 @@ public class ContactsActivity extends AppCompatActivity {
     private ConstraintLayout permissionDeniedLayout;
     private Button givePermission;
     private static final int PERMISSION_REQUEST_CONTACT = 0;
+    private ActivityContactsBinding binding;
 
 
     @Override
@@ -46,13 +48,18 @@ public class ContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        recyclerView = findViewById(R.id.contacts_recycler);
-        searchView = findViewById(R.id.contacts_searchview);
-        searchLayout = findViewById(R.id.search_contacts_frame);
-        searchBack = findViewById(R.id.contacts_search_back);
-        permissionDeniedLayout = findViewById(R.id.contacts_permission_denied_layout);
-        givePermission = findViewById(R.id.contacts_give_access);
-        loadingLayout = findViewById(R.id.contacts_loading_layout);
+        binding = ActivityContactsBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+
+        setContentView(view);
+
+        recyclerView = binding.contactsRecycler;
+        searchView = binding.contactsSearchview;
+        searchLayout = binding.searchContactsFrame;
+        searchBack = binding.contactsSearchBack;
+        permissionDeniedLayout = binding.contactsPermissionDeniedLayout;
+        givePermission = binding.contactsGiveAccess;
+        loadingLayout = binding.contactsLoadingLayout;
 
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
 
@@ -124,12 +131,12 @@ public class ContactsActivity extends AppCompatActivity {
         viewModel.state.loading.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    loadingLayout.setVisibility(View.VISIBLE);
-                }
-                else {
-                    loadingLayout.setVisibility(View.GONE);
-                }
+//                if (aBoolean) {
+//                    loadingLayout.setVisibility(View.VISIBLE);
+//                }
+//                else {
+//                    loadingLayout.setVisibility(View.GONE);
+//                }
             }
         });
 
