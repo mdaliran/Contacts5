@@ -1,5 +1,7 @@
 package com.momid.mainactivity.database;
 
+import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -12,17 +14,17 @@ import java.util.List;
 @Dao
 public interface ContactsDao {
 
-    @Query("SELECT * FROM Contacts ORDER BY full_name ASC LIMIT (:page - 1) * :pageSize, :pageSize")
-    public List<Contact> getAllContacts(int page, int pageSize);
+    @Query("SELECT * FROM Contacts ORDER BY full_name ASC")
+    public DataSource.Factory<Integer, Contact> getAllContacts();
 
     @Query("SELECT COUNT(*) FROM Contacts")
-    public Integer getAllContactsCount();
+    public LiveData<Integer> getAllContactsCount();
 
-    @Query("SELECT * FROM Contacts WHERE full_name LIKE '%' || :searchQuery || '%' LIMIT (:page - 1) * :pageSize, :pageSize")
-    public List<Contact> searchContacts(String searchQuery, int page, int pageSize);
+    @Query("SELECT * FROM Contacts WHERE full_name LIKE '%' || :searchQuery || '%'")
+    public DataSource.Factory<Integer, Contact> searchContacts(String searchQuery);
 
     @Query("SELECT COUNT(*) FROM Contacts WHERE full_name LIKE '%' || :searchQuery || '%'")
-    public Integer searchContactsCount(String searchQuery);
+    public LiveData<Integer> searchContactsCount(String searchQuery);
 
     @Insert
     public void addContact(Contact contact);

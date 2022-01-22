@@ -1,16 +1,16 @@
-package com.momid.mainactivity.responseModel;
+package com.momid.mainactivity.response_model;
 
 import com.momid.mainactivity.data_model.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchContactsResponse {
+public class ContactsListResponse {
 
     private List<Contact> contacts;
     private int totalPages;
 
-    public SearchContactsResponse() {
+    public ContactsListResponse() {
         contacts = new ArrayList<>();
     }
 

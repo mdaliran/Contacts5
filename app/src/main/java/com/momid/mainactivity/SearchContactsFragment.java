@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +17,9 @@ import android.widget.TextView;
 
 import com.momid.mainactivity.data_model.Contact;
 import com.momid.mainactivity.recycler_adapter.ContactsAdapter;
-import com.momid.mainactivity.responseModel.SearchContactsResponse;
+import com.momid.mainactivity.response_model.ContactsListResponse;
+
+import java.util.List;
 
 public class SearchContactsFragment extends Fragment {
 
@@ -52,20 +53,21 @@ public class SearchContactsFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(ContactsViewModel.class);
 
-        adapter = new ContactsAdapter(viewModel.getSearchContactsLivedata().getValue().getContacts());
+        adapter = new ContactsAdapter();
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        adapter.enableLoadMore();
+//        adapter.enableLoadMore();
         adapter.setLoadMore(recyclerView, layoutManager);
         recyclerView.setLayoutManager(layoutManager);
+        viewModel.getSearchContactsListLivedata().observe(requireActivity(), adapter::submitList);
         recyclerView.setAdapter(adapter);
-        adapter.setOnLoadMoreListener(new ContactsAdapter.OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-                if (!viewModel.searchContactsNextPage()) {
-                    adapter.disableLoadMore();
-                }
-            }
-        });
+//        adapter.setOnLoadMoreListener(new ContactsAdapter.OnLoadMoreListener() {
+//            @Override
+//            public void onLoadMore() {
+//                if (!viewModel.searchContactsNextPage()) {
+//                    adapter.disableLoadMore();
+//                }
+//            }
+//        });
         adapter.setOnItemClick(new ContactsAdapter.OnItemClick() {
             @Override
             public void onItemClick(Contact contact) {
@@ -85,13 +87,13 @@ public class SearchContactsFragment extends Fragment {
 
         nothingFound.setVisibility(View.GONE);
 
-        viewModel.getSearchContactsLivedata().observe(requireActivity(), new Observer<SearchContactsResponse>() {
+        viewModel.getSearchContactsListLivedata().observe(requireActivity(), new Observer<List<Contact>>() {
             @Override
-            public void onChanged(SearchContactsResponse searchContactsResponse) {
-                adapter.setContacts(searchContactsResponse.getContacts());
+            public void onChanged(List<Contact> contacts) {
+                adapter.setContacts(contacts);
                 adapter.notifyDataSetChanged();
 
-                if (searchContactsResponse.getContacts().isEmpty()) {
+                if (contacts.isEmpty()) {
                     nothingFound.setVisibility(View.VISIBLE);
                 }
                 else {

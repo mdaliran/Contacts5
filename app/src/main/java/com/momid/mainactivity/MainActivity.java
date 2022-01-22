@@ -11,8 +11,6 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static List<Integer> colors = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,20 +19,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ContactsActivity.class);
         startActivity(intent);
 
-        colors.add(R.color.contact_color1);
-        colors.add(R.color.contact_color2);
-        colors.add(R.color.contact_color3);
-        colors.add(R.color.contact_color4);
-        colors.add(R.color.contact_color5);
-        colors.add(R.color.contact_color6);
-        colors.add(R.color.contact_color7);
-
         finish();
-    }
-
-    public static int getColor() {
-
-        int color = new Random().nextInt(colors.size());
-        return colors.get(color);
     }
 }

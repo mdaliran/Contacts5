@@ -1,5 +1,6 @@
 package com.momid.mainactivity.recycler_adapter;
 
+import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +11,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.momid.mainactivity.ColorHelper;
 import com.momid.mainactivity.MainActivity;
 import com.momid.mainactivity.R;
 import com.momid.mainactivity.data_model.Contact;
 
 import java.util.List;
 
-public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+import javax.inject.Inject;
+
+public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.ViewHolder> {
 
     private List<Contact> contacts;
     private OnItemClick onItemClick;
@@ -27,31 +33,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private boolean loadMoreEnabled = false;
     private boolean loading = true;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    @Inject
+    public ColorHelper colorHelper;
 
-    public ContactsAdapter(List<Contact> contacts) {
-        this.contacts = contacts;
-        onItemClick = new OnItemClick() {
-            @Override
-            public void onItemClick(Contact contact) {
-
-            }
-
-            @Override
-            public void onCallClick(Contact contact) {
-
-            }
-
-            @Override
-            public void onSmsClick(Contact contact) {
-
-            }
-        };
-        onLoadMoreListener = new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-
-            }
-        };
+    public ContactsAdapter() {
+        super(DIFF_CALLBACK);
     }
 
     @NonNull
@@ -65,45 +51,67 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        MyViewHolder viewHolder = (MyViewHolder) holder;
-        Contact contact = contacts.get(position);
-        viewHolder.name.setText(contact.getFullName());
-        viewHolder.imageName.setText(contact.getFullName().charAt(0) + "");
-        viewHolder.image.setBackgroundTintList(ColorStateList.valueOf(viewHolder.itemView.getContext().getColor(MainActivity.getColor())));
-        if (position == 0) {
-            viewHolder.nameSeparator.setText(contact.getFullName().charAt(0) + "");
-            viewHolder.nameSeparatorLayout.setVisibility(View.VISIBLE);
-        }
-        if (position > 0 && !(contact.getFullName().charAt(0) + "").equals(contacts.get(position - 1).getFullName().charAt(0) + "")) {
-            viewHolder.nameSeparator.setText(contact.getFullName().charAt(0) + "");
-            viewHolder.nameSeparatorLayout.setVisibility(View.VISIBLE);
-        }
-        if (position < contacts.size() - 1 && !(contact.getFullName().charAt(0) + "").equals(contacts.get(position + 1).getFullName().charAt(0) + "")) {
-            viewHolder.divider.setVisibility(View.INVISIBLE);
-        }
-        viewHolder.call.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemClick.onCallClick(contact);
-            }
-        });
-        viewHolder.sms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemClick.onSmsClick(contact);
-            }
-        });
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                onItemClick.onItemClick(contact);
-            }
-        });
-    }
+        Contact contact = getItem(position);
+        int contactsCount = getItemCount() - 1;
 
-    @Override
-    public int getItemCount() {
-        return contacts.size();
+        if (contact != null) {
+
+            MyViewHolder viewHolder = (MyViewHolder) holder;
+
+            String fullName = contact.getFullName();
+
+            if (fullName == null) {
+                fullName = "no name";
+            }
+            if (position > 0 && getItem(position - 1).getFullName() == null) {
+                getItem(position - 1).setFullName("no name");
+            }
+            if (position < contactsCount - 1 && getItem(position + 1).getFullName() == null) {
+                getItem(position).setFullName("no name");
+            }
+
+            viewHolder.name.setText(contact.getFullName());
+            viewHolder.imageName.setText(fullName.charAt(0) + "");
+            viewHolder.image.setBackgroundTintList(ColorStateList.valueOf(viewHolder.itemView.getContext().getColor(ColorHelper.getColor())));
+
+            if (position == 0) {
+                viewHolder.nameSeparator.setText(fullName.charAt(0) + "");
+                viewHolder.nameSeparatorLayout.setVisibility(View.VISIBLE);
+            }
+            if (position > 0 && !(fullName.charAt(0) + "").equals(getItem(position - 1).getFullName().charAt(0) + "")) {
+                viewHolder.nameSeparator.setText(fullName.charAt(0) + "");
+                viewHolder.nameSeparatorLayout.setVisibility(View.VISIBLE);
+            }
+            if (position < contactsCount - 1 && !(fullName.charAt(0) + "").equals(getItem(position + 1).getFullName().charAt(0) + "")) {
+                viewHolder.divider.setVisibility(View.INVISIBLE);
+            }
+
+            viewHolder.call.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClick != null) {
+                        onItemClick.onCallClick(contact);
+                    }
+                }
+            });
+            viewHolder.sms.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClick != null) {
+                        onItemClick.onSmsClick(contact);
+                    }
+                }
+            });
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                onItemClick.onItemClick(contact);
+                }
+            });
+        }
+        else {
+//            holder.clear
+        }
     }
 
     @Override
@@ -167,6 +175,23 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void disableLoadMore() {
         loadMoreEnabled = false;
     }
+
+    private static DiffUtil.ItemCallback<Contact> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<Contact>() {
+                // Concert details may have changed if reloaded from the database,
+                // but ID is fixed.
+                @Override
+                public boolean areItemsTheSame(Contact oldContact, Contact newContact) {
+                    return oldContact.getId() == newContact.getId();
+                }
+
+                @SuppressLint("DiffUtilEquals")
+                @Override
+                public boolean areContentsTheSame(Contact oldContact,
+                                                  Contact newContact) {
+                    return oldContact.equals(newContact);
+                }
+            };
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 

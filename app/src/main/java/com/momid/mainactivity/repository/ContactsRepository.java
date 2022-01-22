@@ -1,79 +1,98 @@
 package com.momid.mainactivity.repository;
 
-import android.app.Application;
-
-import androidx.room.Room;
+import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 
 import com.momid.mainactivity.data_model.Contact;
 import com.momid.mainactivity.database.ContactsDao;
-import com.momid.mainactivity.database.ContactsDatabase;
 import com.momid.mainactivity.request_model.AllContactsRequest;
 import com.momid.mainactivity.request_model.SearchContactsRequest;
-import com.momid.mainactivity.responseModel.AllContactsResponse;
-import com.momid.mainactivity.responseModel.SearchContactsResponse;
 
 import java.util.List;
 
-public class ContactsRepository {
+import javax.inject.Inject;
 
-    private Application application;
-    private ContactsDatabase contactsDatabase;
-    private ContactsDao contactsDao;
+public class ContactsRepository implements ContactsRepositoryInterface {
 
+//    public ContactsDatabase contactsDatabase;
+    public ContactsDao contactsDao;
 
-    public ContactsRepository(Application application) {
+    @Inject
+    public ContactsRepository(ContactsDao contactsDao) {
 
-        this.application = application;
-        contactsDatabase = Room.databaseBuilder(application, ContactsDatabase.class, "contacts_database15").build();
-        contactsDao = contactsDatabase.contactsDao();
+        this.contactsDao = contactsDao;
+
+//        contactsDatabase = Room.databaseBuilder(application, ContactsDatabase.class, "contacts_database15").build();
+//        contactsDao = contactsDatabase.contactsDao();
     }
 
-    public void getAllContacts(AllContactsRequest request, DataCallback<AllContactsResponse> dataCallback) {
+    @Override
+    public DataSource.Factory<Integer, Contact> getAllContacts(AllContactsRequest request) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                AllContactsResponse allContactsResponse = new AllContactsResponse();
-                List<Contact> contacts = contactsDao.getAllContacts(request.getPage(), request.getPageSize());
-                allContactsResponse.setContacts(contacts);
-                allContactsResponse.setTotalPages(contactsDao.getAllContactsCount()/request.getPageSize() + 1);
-                dataCallback.onFinish(allContactsResponse);
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                ContactsListResponse contactsListResponse = new ContactsListResponse();
+//                List<Contact> contacts = contactsDao.getAllContacts(request.getPage(), request.getPageSize());
+//                contactsListResponse.setContacts(contacts);
+//                contactsListResponse.setTotalPages(contactsDao.getAllContactsCount()/request.getPageSize() + 1);
+//                dataCallback.onFinish(contactsListResponse);
+//            }
+//        }).start();
+
+        return contactsDao.getAllContacts();
     }
 
-    public void searchContacts(SearchContactsRequest request, DataCallback<SearchContactsResponse> dataCallback) {
+    @Override
+    public DataSource.Factory<Integer, Contact> searchContacts(SearchContactsRequest request) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SearchContactsResponse searchContactsResponse = new SearchContactsResponse();
-                List<Contact> contacts = contactsDao.searchContacts(request.getSearchQuery(), request.getPage(), request.getPageSize());
-                searchContactsResponse.setContacts(contacts);
-                searchContactsResponse.setTotalPages(contactsDao.searchContactsCount(request.getSearchQuery())/request.getPageSize() + 1);
-                dataCallback.onFinish(searchContactsResponse);
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                ContactsListResponse contactsListResponse = new ContactsListResponse();
+//                List<Contact> contacts = contactsDao.searchContacts(request.getSearchQuery(), request.getPage(), request.getPageSize());
+//                contactsListResponse.setContacts(contacts);
+//                contactsListResponse.setTotalPages(contactsDao.searchContactsCount(request.getSearchQuery())/request.getPageSize() + 1);
+//                dataCallback.onFinish(contactsListResponse);
+//            }
+//        }).start();
+
+        return contactsDao.searchContacts(request.getSearchQuery());
     }
 
-    public void insertContactsToDatabase(List<Contact> contacts, DataCallback<Boolean> dataCallback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                contactsDao.addAllContacts(contacts);
-                dataCallback.onFinish(true);
-            }
-        }).start();
+    @Override
+    public void insertContactsToDatabase(List<Contact> contacts) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                contactsDao.addAllContacts(contacts);
+//                dataCallback.onFinish(true);
+//            }
+//        }).start();
+
+        contactsDao.addAllContacts(contacts);
     }
 
-    public void areContactsStoredInDatabase(DataCallback<Boolean> dataCallback) {
+//    public void areContactsStoredInDatabase(DataCallback<Boolean> dataCallback) {
+//
+////        new Thread(new Runnable() {
+////            @Override
+////            public void run() {
+////                Boolean areStored = contactsDao.getAllContactsCount() > 0;
+////                dataCallback.onFinish(areStored);
+////            }
+////        }).start();
+//    }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Boolean areStored = contactsDao.getAllContactsCount() > 0;
-                dataCallback.onFinish(areStored);
-            }
-        }).start();
+    @Override
+    public LiveData<Integer> getContactsCount() {
+
+        return contactsDao.getAllContactsCount();
+    }
+
+    @Override
+    public LiveData<Integer> getSearchContactsCount(String searchQuery) {
+
+        return contactsDao.searchContactsCount(searchQuery);
     }
 }

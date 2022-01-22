@@ -20,11 +20,16 @@ import android.widget.SearchView;
 
 import com.momid.mainactivity.data_model.Contact;
 import com.momid.mainactivity.recycler_adapter.ContactsAdapter;
-import com.momid.mainactivity.responseModel.AllContactsResponse;
+import com.momid.mainactivity.response_model.ContactsListResponse;
 
+import java.util.List;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ContactsActivity extends AppCompatActivity {
 
-    private ContactsViewModel viewModel;
+    public ContactsViewModel viewModel;
     private RecyclerView recyclerView;
     private ContactsAdapter adapter;
     private LinearLayoutManager layoutManager;
@@ -52,29 +57,32 @@ public class ContactsActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
 
         viewModel.init();
-        viewModel.getAllContactsLivedata().observe(this, new Observer<AllContactsResponse>() {
+        viewModel.getContactsListLivedata().observe(this, new Observer<List<Contact>>() {
             @Override
-            public void onChanged(AllContactsResponse allContactsResponse) {
-                adapter.setContacts(allContactsResponse.getContacts());
+            public void onChanged(List<Contact> contacts) {
+                adapter.setContacts(contacts);
                 if (recyclerView.getAdapter() == null) {
                     recyclerView.setAdapter(adapter);
                 }
+                viewModel.state.loading.postValue(false);
                 adapter.notifyDataSetChanged();
             }
         });
 
-        adapter = new ContactsAdapter(viewModel.getAllContactsLivedata().getValue().getContacts());
+        adapter = new ContactsAdapter();
         layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter.enableLoadMore();
-        adapter.setOnLoadMoreListener(new ContactsAdapter.OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-                if (!viewModel.allContactsNextPage()) {
-                    adapter.disableLoadMore();
-                }
-            }
-        });
+        viewModel.getContactsListLivedata().observe(this, adapter::submitList);
+        recyclerView.setAdapter(adapter);
+//        adapter.enableLoadMore();
+//        adapter.setOnLoadMoreListener(new ContactsAdapter.OnLoadMoreListener() {
+//            @Override
+//            public void onLoadMore() {
+//                if (!viewModel.allContactsNextPage()) {
+//                    adapter.disableLoadMore();
+//                }
+//            }
+//        });
         adapter.setLoadMore(recyclerView, layoutManager);
         adapter.setOnItemClick(new ContactsAdapter.OnItemClick() {
             @Override
