@@ -57,7 +57,7 @@
                             android:tint="@color/white"
                             app:srcCompat="@drawable/back"
                             android:visibility="@{viewmodel.state.searchMode ? View.VISIBLE : View.GONE}"
-                            android:onClick="@{() -> clickListener.onGivePermissionClick()}"/>
+                            android:onClick="@{() -> clickListener.onSearchBackClick()}"/>
 
                         <SearchView
                             android:id="@+id/contacts_searchview"

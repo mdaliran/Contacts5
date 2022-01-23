@@ -47,7 +47,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
+//        setContentView(R.layout.activity_contacts);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
         binding.setLifecycleOwner(this);
@@ -67,6 +67,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
 
         binding.setViewmodel(viewModel);
+        binding.setClickListener(this);
 
         viewModel.init();
         viewModel.getContactsListLivedata().observe(this, new Observer<List<Contact>>() {
@@ -136,26 +137,14 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         viewModel.state.loading.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-//                if (aBoolean) {
-//                    loadingLayout.setVisibility(View.VISIBLE);
-//                }
-//                else {
-//                    loadingLayout.setVisibility(View.GONE);
-//                }
+
             }
         });
 
         viewModel.state.searchMode.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-//                if (aBoolean) {
-//                    searchBack.setVisibility(View.VISIBLE);
-//                    searchLayout.setVisibility(View.VISIBLE);
-//                }
-//                else {
-//                    searchBack.setVisibility(View.GONE);
-//                    searchLayout.setVisibility(View.INVISIBLE);
-//                }
+
             }
         });
 
@@ -171,20 +160,6 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                 }
             }
         });
-
-//        givePermission.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                askForPermission();
-//            }
-//        });
-//
-//        searchBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                viewModel.state.searchMode.setValue(false);
-//            }
-//        });
     }
 
     private boolean askForPermission() {
