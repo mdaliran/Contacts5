@@ -18,8 +18,6 @@ public interface ContactsRepositoryInterface {
 
     void insertContactsToDatabase(List<Contact> contacts);
 
-//    void areContactsStoredInDatabase(DataCallback<Boolean> dataCallback);
-
     LiveData<Integer> getContactsCount();
 
     LiveData<Integer> getSearchContactsCount(String searchQuery);

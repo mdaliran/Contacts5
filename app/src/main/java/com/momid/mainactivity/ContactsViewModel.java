@@ -1,6 +1,7 @@
 package com.momid.mainactivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -43,6 +44,7 @@ public class ContactsViewModel extends AndroidViewModel {
     private LiveData<Integer> contactsCount;
     public ContactsRepositoryInterface contactsRepositoryInterface;
     public ContactsActivityState state = new ContactsActivityState();
+    private static final int PERMISSION_REQUEST_CONTACT = 0;
 
     @Inject
     public ContactsViewModel(Application application, ContactsRepositoryInterface contactsRepositoryInterface) {
@@ -65,7 +67,6 @@ public class ContactsViewModel extends AndroidViewModel {
             });
 
             contactsCount = contactsRepositoryInterface.getContactsCount();
-//            searchContactsCount = contactsRepositoryInterface.getSearchContactsCount(searchContactsRequest.getValue().getSearchQuery());
 
             contactsCount.observeForever(new Observer<Integer>() {
                 @Override
@@ -109,12 +110,18 @@ public class ContactsViewModel extends AndroidViewModel {
         state.loading.postValue(true);
 
         contactsRepositoryInterface.getAllContacts(allContactsRequest.getValue());
-//        contactsRepositoryInterface.getContactsCount();
     }
 
     public void searchContacts(SearchContactsRequest request) {
 
         this.searchContactsRequest.postValue(request);
+    }
+
+    public void askForPermission(Activity activity) {
+
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            activity.requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CONTACT);
+        }
     }
 
     public void onSearchViewTextChange(String searchQuery) {

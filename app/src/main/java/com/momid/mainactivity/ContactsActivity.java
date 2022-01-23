@@ -87,15 +87,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         recyclerView.setLayoutManager(layoutManager);
         viewModel.getContactsListLivedata().observe(this, adapter::submitList);
         recyclerView.setAdapter(adapter);
-//        adapter.enableLoadMore();
-//        adapter.setOnLoadMoreListener(new ContactsAdapter.OnLoadMoreListener() {
-//            @Override
-//            public void onLoadMore() {
-//                if (!viewModel.allContactsNextPage()) {
-//                    adapter.disableLoadMore();
-//                }
-//            }
-//        });
+
         adapter.setLoadMore(recyclerView, layoutManager);
         adapter.setOnItemClick(new ContactsAdapter.OnItemClick() {
             @Override
@@ -134,20 +126,6 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
             }
         });
 
-        viewModel.state.loading.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-
-            }
-        });
-
-        viewModel.state.searchMode.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-
-            }
-        });
-
         viewModel.state.contactsPermissionNeeded.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -162,14 +140,9 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         });
     }
 
-    private boolean askForPermission() {
+    private void askForPermission() {
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CONTACT);
-            return false;
-        }
-
-        return true;
+        viewModel.askForPermission(this);
     }
 
     public void startPermissionDeniedMode() {
