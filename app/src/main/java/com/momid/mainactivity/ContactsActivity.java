@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,7 +49,9 @@ public class ContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        binding = ActivityContactsBinding.inflate(getLayoutInflater());
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
+        binding.setLifecycleOwner(this);
+//        binding.setViewmodel(viewModel);
         View view = binding.getRoot();
 
         setContentView(view);
@@ -62,6 +65,8 @@ public class ContactsActivity extends AppCompatActivity {
         loadingLayout = binding.contactsLoadingLayout;
 
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
+
+        binding.setViewmodel(viewModel);
 
         viewModel.init();
         viewModel.getContactsListLivedata().observe(this, new Observer<List<Contact>>() {
@@ -143,14 +148,14 @@ public class ContactsActivity extends AppCompatActivity {
         viewModel.state.searchMode.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    searchBack.setVisibility(View.VISIBLE);
-                    searchLayout.setVisibility(View.VISIBLE);
-                }
-                else {
-                    searchBack.setVisibility(View.GONE);
-                    searchLayout.setVisibility(View.INVISIBLE);
-                }
+//                if (aBoolean) {
+//                    searchBack.setVisibility(View.VISIBLE);
+//                    searchLayout.setVisibility(View.VISIBLE);
+//                }
+//                else {
+//                    searchBack.setVisibility(View.GONE);
+//                    searchLayout.setVisibility(View.INVISIBLE);
+//                }
             }
         });
 

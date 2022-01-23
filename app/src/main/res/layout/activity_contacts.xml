@@ -52,7 +52,8 @@
                             android:background="@android:color/transparent"
                             android:padding="10dp"
                             android:tint="@color/white"
-                            app:srcCompat="@drawable/back" />
+                            app:srcCompat="@drawable/back"
+                            android:visibility="@{viewmodel.state.searchMode ? View.VISIBLE : View.GONE}"/>
 
                         <SearchView
                             android:id="@+id/contacts_searchview"
@@ -100,7 +101,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:visibility="@{viewmodel.state.searchMode ? View.VISIBLE : View.GONE}">
 
         </FrameLayout>
 
