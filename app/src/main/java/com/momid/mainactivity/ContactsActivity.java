@@ -29,7 +29,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ContactsActivity extends AppCompatActivity {
+public class ContactsActivity extends AppCompatActivity implements ContactsClickListener {
 
     public ContactsViewModel viewModel;
     private RecyclerView recyclerView;
@@ -205,6 +205,16 @@ public class ContactsActivity extends AppCompatActivity {
     public void endPermissionMode() {
 
         permissionDeniedLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onGivePermissionClick() {
+        viewModel.state.contactsPermissionNeeded.postValue(true);
+    }
+
+    @Override
+    public void onSearchBackClick() {
+        viewModel.state.searchMode.postValue(false);
     }
 
     @Override
