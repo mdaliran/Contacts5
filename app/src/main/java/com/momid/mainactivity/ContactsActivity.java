@@ -172,19 +172,19 @@ public class ContactsActivity extends AppCompatActivity {
             }
         });
 
-        givePermission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                askForPermission();
-            }
-        });
-
-        searchBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewModel.state.searchMode.setValue(false);
-            }
-        });
+//        givePermission.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                askForPermission();
+//            }
+//        });
+//
+//        searchBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                viewModel.state.searchMode.setValue(false);
+//            }
+//        });
     }
 
     private boolean askForPermission() {

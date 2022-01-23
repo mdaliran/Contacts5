@@ -108,18 +108,6 @@ public class ContactsViewModel extends AndroidViewModel {
 
         state.loading.postValue(true);
 
-//        contactsRepositoryInterface.getAllContacts(allContactsRequest).observeForever(new Observer<List<Contact>>() {
-//            @Override
-//            public void onChanged(List<Contact> contacts) {
-//                ContactsListResponse contactsListResponse = new ContactsListResponse();
-//                contactsListResponse.setContacts(contacts);
-//                contactsListResponse.setTotalPages(contactsCount/allContactsRequest.getPageSize() + 1);
-//                allContactsLivedata.postValue(contactsListResponse);
-//
-//                state.loading.postValue(false);
-//            }
-//        });
-
         contactsRepositoryInterface.getAllContacts(allContactsRequest.getValue());
 //        contactsRepositoryInterface.getContactsCount();
     }
@@ -127,76 +115,7 @@ public class ContactsViewModel extends AndroidViewModel {
     public void searchContacts(SearchContactsRequest request) {
 
         this.searchContactsRequest.postValue(request);
-
-//        contactsRepositoryInterface.searchContacts(request).observeForever(new Observer<List<Contact>>() {
-//                    @Override
-//                    public void onChanged(List<Contact> contacts) {
-//                        contactsRepositoryInterface.getSearchContactsCount(request.getSearchQuery())
-//                                .observeForever(new Observer<Integer>() {
-//                            @Override
-//                            public void onChanged(Integer integer) {
-//                                ContactsListResponse contactsListResponse = new ContactsListResponse();
-//                                contactsListResponse.setContacts(contacts);
-//                                contactsListResponse.setTotalPages(integer/request.getPageSize());
-//                                searchContactsLivedata.postValue(contactsListResponse);
-//                            }
-//                        });
-//                    }
-//                });
-
-//        contactsRepositoryInterface.searchContacts(request);
     }
-
-//    public boolean allContactsNextPage() {
-//
-////        if (contactsCount.getValue() != null) {
-//            contactsTotalPages = contactsCount.getValue() / allContactsRequest.getValue().getPageSize() + 1;
-//            Log.d("", contactsCount.getValue().toString());
-////        }
-//
-//        if (allContactsRequest.getValue().getPage() < contactsTotalPages) {
-//            allContactsRequest.getValue().setPage(allContactsRequest.getValue().getPage() + 1);
-//
-////            contactsRepositoryInterface.getAllContacts(allContactsRequest).observeForever(new Observer<List<Contact>>() {
-////                        @Override
-////                        public void onChanged(List<Contact> contacts) {
-////                            allContactsLivedata.getValue().getContacts().addAll(contacts);
-////                            allContactsLivedata.postValue(allContactsLivedata.getValue());
-////                        }
-////                    });
-//
-//            contactsRepositoryInterface.getAllContacts(allContactsRequest.getValue());
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
-
-//    public boolean searchContactsNextPage() {
-//
-//        if (searchContactsCount.getValue() != null) {
-//            searchContactsTotalPages = searchContactsCount.getValue() / searchContactsRequest.getValue().getPageSize() + 1;
-//        }
-//
-//        if (searchContactsRequest.getValue().getPage() < searchContactsTotalPages) {
-//            searchContactsRequest.getValue().setPage(searchContactsRequest.getValue().getPage() + 1);
-//
-////            contactsRepositoryInterface.searchContacts(searchContactsRequest).observeForever(new Observer<List<Contact>>() {
-////                        @Override
-////                        public void onChanged(List<Contact> contacts) {
-////                            searchContactsLivedata.getValue().getContacts().addAll(contacts);
-////                            searchContactsLivedata.postValue(searchContactsLivedata.getValue());
-////                        }
-////                    });
-//
-//            contactsRepositoryInterface.searchContacts(searchContactsRequest.getValue());
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
 
     public void onSearchViewTextChange(String searchQuery) {
 
@@ -206,6 +125,16 @@ public class ContactsViewModel extends AndroidViewModel {
             request.setSearchQuery(searchQuery);
             searchContacts(request);
         }
+    }
+
+    public void onGivePermissionClick() {
+
+        state.contactsPermissionNeeded.postValue(true);
+    }
+
+    public void onSearchBackClick() {
+
+        state.searchMode.postValue(false);
     }
 
     public void onCall(Contact contact) {
