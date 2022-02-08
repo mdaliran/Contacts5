@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.momid.mainactivity.data_model.Contact;
+import com.momid.mainactivity.databinding.FragmentSearchContactsBinding;
 import com.momid.mainactivity.recycler_adapter.ContactsAdapter;
 import com.momid.mainactivity.response_model.ContactsListResponse;
 
@@ -28,6 +30,7 @@ public class SearchContactsFragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private TextView nothingFound;
     private ContactsViewModel viewModel;
+    private FragmentSearchContactsBinding binding;
 
 
     public SearchContactsFragment() {
@@ -41,7 +44,10 @@ public class SearchContactsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search_contacts, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_contacts, container, false);
+        View view = binding.getRoot();
+//        binding.setViewmodel(viewModel);
+        return view;
     }
 
     @Override
@@ -52,6 +58,9 @@ public class SearchContactsFragment extends Fragment {
         nothingFound = view.findViewById(R.id.search_contacts_nothing_found);
 
         viewModel = new ViewModelProvider(requireActivity()).get(ContactsViewModel.class);
+
+        binding.setLifecycleOwner(requireActivity());
+        binding.setViewmodel(viewModel);
 
         adapter = new ContactsAdapter();
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -93,12 +102,12 @@ public class SearchContactsFragment extends Fragment {
                 adapter.setContacts(contacts);
                 adapter.notifyDataSetChanged();
 
-                if (contacts.isEmpty()) {
-                    nothingFound.setVisibility(View.VISIBLE);
-                }
-                else {
-                    nothingFound.setVisibility(View.INVISIBLE);
-                }
+//                if (contacts.isEmpty()) {
+//                    nothingFound.setVisibility(View.VISIBLE);
+//                }
+//                else {
+//                    nothingFound.setVisibility(View.INVISIBLE);
+//                }
             }
         });
     }
