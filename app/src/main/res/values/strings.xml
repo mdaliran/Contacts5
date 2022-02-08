@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Contacts</string>
     <string name="nothing_found_on_search">موردی یافت نشد. عبارت جستجوی خود را تغییر دهید</string>
+    <string name="name">مخاطبین</string>
+    <string name="please_give_permission">برای مشاهده لیست، باید اجازه دسترسی به مخاطبان را بدهید</string>
+    <string name="give_permission">اجازه دسترسی</string>
 </resources>
