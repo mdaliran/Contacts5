@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="item"
+            type="com.momid.mainactivity.data_model.Contact" />
+        <variable
+            name="previousItem"
+            type="com.momid.mainactivity.data_model.Contact" />
+        <variable
+            name="nextItem"
+            type="com.momid.mainactivity.data_model.Contact" />
+        <variable
+            name="position"
+            type="int" />
+        <variable
+            name="itemCount"
+            type="int" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -16,7 +34,10 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:full_name="@{item.fullName}"
+        app:previousContact="@{previousItem}"
+        app:position="@{position}">
 
         <View
             android:id="@+id/divider5"
@@ -34,7 +55,11 @@
             android:layout_marginRight="16dp"
             android:gravity="center"
             android:textColor="@color/gray3"
-            tools:text="آ" />
+            tools:text="آ"
+            app:full_name="@{item.fullName}"
+            app:previousContact="@{previousItem}"
+            app:position="@{position}"/>
+
     </LinearLayout>
 
     <TextView
@@ -46,7 +71,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/contact1_imageview"
         app:layout_constraintEnd_toStartOf="@+id/contact1_imageview"
         app:layout_constraintTop_toTopOf="@+id/contact1_imageview"
-        tools:text="نام نمایشی" />
+        tools:text="نام نمایشی"
+        app:full_name="@{item.fullName}"/>
 
     <ImageView
         android:id="@+id/contact1_imageview"
@@ -58,7 +84,8 @@
         android:background="@drawable/round1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contact1_name_separator_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/contact1_name_separator_layout"
+        app:image_background="@{null}"/>
 
     <TextView
         android:id="@+id/contact1_image_name"
@@ -71,7 +98,8 @@
         app:layout_constraintEnd_toEndOf="@+id/contact1_imageview"
         app:layout_constraintStart_toStartOf="@+id/contact1_imageview"
         app:layout_constraintTop_toTopOf="@+id/contact1_imageview"
-        tools:text="ن" />
+        tools:text="ن"
+        app:image_name="@{item.fullName}"/>
 
     <ImageButton
         android:id="@+id/contact1_call"
@@ -108,5 +136,10 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:full_name="@{item.fullName}"
+        app:nextContact="@{nextItem}"
+        app:itemCount="@{itemCount}"
+        app:position="@{position}"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

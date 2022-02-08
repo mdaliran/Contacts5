@@ -82,7 +82,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
             }
         });
 
-        adapter = new ContactsAdapter();
+        adapter = new ContactsAdapter(this);
         layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         viewModel.getContactsListLivedata().observe(this, adapter::submitList);

@@ -62,7 +62,7 @@ public class SearchContactsFragment extends Fragment {
         binding.setLifecycleOwner(requireActivity());
         binding.setViewmodel(viewModel);
 
-        adapter = new ContactsAdapter();
+        adapter = new ContactsAdapter(requireActivity());
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 //        adapter.enableLoadMore();
         adapter.setLoadMore(recyclerView, layoutManager);
