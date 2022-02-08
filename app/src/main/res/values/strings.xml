@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Contacts</string>
+    <string name="nothing_found_on_search">موردی یافت نشد. عبارت جستجوی خود را تغییر دهید</string>
 </resources>
