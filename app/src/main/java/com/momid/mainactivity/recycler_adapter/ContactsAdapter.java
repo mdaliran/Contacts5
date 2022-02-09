@@ -29,8 +29,9 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
     @Inject
     public ColorHelper colorHelper;
 
-    public ContactsAdapter() {
+    public ContactsAdapter(OnItemClick onItemClick) {
         super(DIFF_CALLBACK);
+        this.onItemClick = onItemClick;
     }
 
     @NonNull
@@ -77,10 +78,6 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
 
     public void setContacts(List<Contact> contacts) {
         this.contacts = contacts;
-    }
-
-    public void setOnItemClick(OnItemClick onItemClick) {
-        this.onItemClick = onItemClick;
     }
 
     private static DiffUtil.ItemCallback<Contact> DIFF_CALLBACK =

@@ -82,13 +82,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
             }
         });
 
-        adapter = new ContactsAdapter();
-        layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        viewModel.getContactsListLivedata().observe(this, adapter::submitList);
-        recyclerView.setAdapter(adapter);
-
-        adapter.setOnItemClick(new ContactsAdapter.OnItemClick() {
+        adapter = new ContactsAdapter(new ContactsAdapter.OnItemClick() {
             @Override
             public void onItemClick(Contact contact) {
 
@@ -104,6 +98,10 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                 viewModel.onMessage(contact);
             }
         });
+        layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        viewModel.getContactsListLivedata().observe(this, adapter::submitList);
+        recyclerView.setAdapter(adapter);
 
         SearchContactsFragment searchContactsFragment = SearchContactsFragment.getInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.search_contacts_frame, searchContactsFragment).commit();

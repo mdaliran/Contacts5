@@ -62,21 +62,7 @@ public class SearchContactsFragment extends Fragment {
         binding.setLifecycleOwner(requireActivity());
         binding.setViewmodel(viewModel);
 
-        adapter = new ContactsAdapter();
-        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-//        adapter.enableLoadMore();
-        recyclerView.setLayoutManager(layoutManager);
-        viewModel.getSearchContactsListLivedata().observe(requireActivity(), adapter::submitList);
-        recyclerView.setAdapter(adapter);
-//        adapter.setOnLoadMoreListener(new ContactsAdapter.OnLoadMoreListener() {
-//            @Override
-//            public void onLoadMore() {
-//                if (!viewModel.searchContactsNextPage()) {
-//                    adapter.disableLoadMore();
-//                }
-//            }
-//        });
-        adapter.setOnItemClick(new ContactsAdapter.OnItemClick() {
+        adapter = new ContactsAdapter(new ContactsAdapter.OnItemClick() {
             @Override
             public void onItemClick(Contact contact) {
 
@@ -92,6 +78,11 @@ public class SearchContactsFragment extends Fragment {
                 viewModel.onMessage(contact);
             }
         });
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+//        adapter.enableLoadMore();
+        recyclerView.setLayoutManager(layoutManager);
+        viewModel.getSearchContactsListLivedata().observe(requireActivity(), adapter::submitList);
+        recyclerView.setAdapter(adapter);
 
         nothingFound.setVisibility(View.GONE);
 
