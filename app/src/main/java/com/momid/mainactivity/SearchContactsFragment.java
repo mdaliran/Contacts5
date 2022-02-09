@@ -62,10 +62,9 @@ public class SearchContactsFragment extends Fragment {
         binding.setLifecycleOwner(requireActivity());
         binding.setViewmodel(viewModel);
 
-        adapter = new ContactsAdapter(requireActivity());
+        adapter = new ContactsAdapter();
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 //        adapter.enableLoadMore();
-        adapter.setLoadMore(recyclerView, layoutManager);
         recyclerView.setLayoutManager(layoutManager);
         viewModel.getSearchContactsListLivedata().observe(requireActivity(), adapter::submitList);
         recyclerView.setAdapter(adapter);
