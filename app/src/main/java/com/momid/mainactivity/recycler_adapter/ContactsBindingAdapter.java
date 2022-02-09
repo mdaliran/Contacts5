@@ -12,7 +12,7 @@ import androidx.databinding.BindingAdapter;
 import com.momid.mainactivity.ColorHelper;
 import com.momid.mainactivity.data_model.Contact;
 
-public class ContactsRecyclerBindingAdapter {
+public class ContactsBindingAdapter {
 
     @BindingAdapter("full_name")
     public static void setFullName(TextView textView, String fullName) {
