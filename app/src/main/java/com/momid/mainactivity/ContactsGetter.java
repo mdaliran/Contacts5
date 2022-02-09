@@ -9,9 +9,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.Base64;
 
 import com.momid.mainactivity.data_model.Contact;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +37,21 @@ public class ContactsGetter {
 
                 Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(id));
                 Uri pURI = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+                String photoString = "";
 
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                if (name == null) {
+                    name = "no name";
+                }
                 String lastnumber = "0";
 
                 Bitmap photo = null;
                 if (inputStream != null) {
                     photo = BitmapFactory.decodeStream(inputStream);
+                    photoString = BitMapToString(photo);
+                }
+                else {
+                    photoString = "null";
                 }
 
                 if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
@@ -67,6 +77,7 @@ public class ContactsGetter {
                 info.setContactId(id);
                 info.setFullName(name);
                 info.setPhoneNumber(lastnumber);
+                info.setImageUri(photoString);
 //                        info.photo = photo;
 //                        info.photoURI= pURI;
                 list.add(info);
@@ -75,5 +86,24 @@ public class ContactsGetter {
         }
 
         return list;
+    }
+
+    public static String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+    public static Bitmap StringToBitMap(String encodedString){
+        try {
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            e.getMessage();
+            return null;
+        }
     }
 }

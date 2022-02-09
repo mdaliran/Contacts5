@@ -108,9 +108,9 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
 
         public void bindItem(Contact contact, Contact previousContact, Contact nextContact, int itemCount, int position) {
 
-            binding.setItem(contact);
-            binding.setPreviousItem(previousContact);
-            binding.setNextItem(nextContact);
+            binding.setContact(contact);
+            binding.setPreviousContact(previousContact);
+            binding.setNextContact(nextContact);
             binding.setItemCount(itemCount);
             binding.setPosition(position);
             binding.executePendingBindings();
