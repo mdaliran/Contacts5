@@ -17,26 +17,26 @@ import com.momid.mainactivity.data_model.Contact;
 
 public class ContactsBindingAdapter {
 
-    @BindingAdapter("full_name")
+    @BindingAdapter("fullName")
     public static void setFullName(TextView textView, String fullName) {
 
         textView.setText(fullName);
     }
 
-    @BindingAdapter("image_name")
+    @BindingAdapter("imageName")
     public static void setImageName(TextView textView, Contact contact) {
 
-        if (contact.getImageUri().equals("null")) {
+        if (contact.getImageUri().equals("")) {
             textView.setText(String.valueOf(contact.getFullName().charAt(0)));
         }
     }
 
-    @BindingAdapter("image_background")
+    @BindingAdapter("imageBackground")
     public static void setImageBackground(ImageView imageView, Contact contact) {
 
         imageView.setClipToOutline(true);
 
-        if (!contact.getImageUri().equals("null")) {
+        if (!contact.getImageUri().equals("")) {
             Glide.with(imageView.getContext()).load(ContactsGetter.StringToBitMap(contact.getImageUri())).into(imageView);
         }
         else {
@@ -44,32 +44,32 @@ public class ContactsBindingAdapter {
         }
     }
 
-    @BindingAdapter({"full_name", "previousContact", "position"})
-    public static void setNameSeparatorText(TextView nameSeparator, String fullName, @Nullable Contact previousContact, int position) {
+    @BindingAdapter({"fullNameFirstLetter", "previousContactFirstLetter", "position"})
+    public static void setNameSeparatorText(TextView nameSeparator, String fullNameFirstLetter, @Nullable String previousContactFirstLetter, int position) {
 
         if (position == 0) {
-            nameSeparator.setText(String.valueOf(fullName.charAt(0)));
+            nameSeparator.setText(String.valueOf(fullNameFirstLetter));
         }
-        if (position > 0 && !(String.valueOf(fullName.charAt(0))).equals(previousContact.getFullName().charAt(0) + "")) {
-            nameSeparator.setText(String.valueOf(fullName.charAt(0)));
+        if (position > 0 && !(String.valueOf(fullNameFirstLetter)).equals(previousContactFirstLetter)) {
+            nameSeparator.setText(String.valueOf(fullNameFirstLetter));
         }
     }
 
-    @BindingAdapter({"full_name", "previousContact", "position"})
-    public static void setNameSeparatorLayout(LinearLayout nameSeparatorLayout, String fullName, @Nullable Contact previousContact, int position) {
+    @BindingAdapter({"fullNameFirstLetter", "previousContactFirstLetter", "position"})
+    public static void setNameSeparatorLayout(LinearLayout nameSeparatorLayout, String fullNameFirstLetter, @Nullable String previousContactFirstLetter, int position) {
 
         if (position == 0) {
             nameSeparatorLayout.setVisibility(View.VISIBLE);
         }
-        if (position > 0 && !(String.valueOf(fullName.charAt(0))).equals(previousContact.getFullName().charAt(0) + "")) {
+        if (position > 0 && !(String.valueOf(fullNameFirstLetter)).equals(previousContactFirstLetter)) {
             nameSeparatorLayout.setVisibility(View.VISIBLE);
         }
     }
 
-    @BindingAdapter({"full_name", "nextContact", "itemCount", "position"})
-    public static void setDividerVisibility(View divider, String fullName, @Nullable Contact nextContact, int itemCount, int position) {
+    @BindingAdapter({"fullNameFirstLetter", "nextContactFirstLetter", "itemCount", "position"})
+    public static void setDividerVisibility(View divider, String fullNameFirstLetter, @Nullable String nextContactFirstLetter, int itemCount, int position) {
 
-        if (position < itemCount - 1 && !(String.valueOf(fullName.charAt(0)).equals(nextContact.getFullName().charAt(0) + ""))) {
+        if (position < itemCount - 1 && !(String.valueOf(fullNameFirstLetter).equals(nextContactFirstLetter))) {
             divider.setVisibility(View.INVISIBLE);
         }
     }

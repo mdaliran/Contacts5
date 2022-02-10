@@ -51,7 +51,7 @@ public class ContactsGetter {
                     photoString = BitMapToString(photo);
                 }
                 else {
-                    photoString = "null";
+                    photoString = "";
                 }
 
                 if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {

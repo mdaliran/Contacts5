@@ -26,7 +26,6 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
     private boolean loadMoreEnabled = false;
     private boolean loading = true;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
-    @Inject
     public ColorHelper colorHelper;
 
     public ContactsAdapter(OnItemClick onItemClick) {
@@ -47,15 +46,15 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         Contact contact = getItem(position);
-        Contact previousContact = position > 0 ? getItem(position - 1) : null;
-        Contact nextContact = position < getItemCount() - 2 ? getItem(position + 1) : null;
+        String previousContactFirstLetter = position > 0 ? String.valueOf(getItem(position - 1).getFullName().charAt(0)) : null;
+        String nextContactFirstLetter = position < getItemCount() - 2 ? String.valueOf(getItem(position + 1).getFullName().charAt(0)) : null;
         int contactsCount = getItemCount() - 1;
 
         if (contact != null) {
 
             MyViewHolder viewHolder = (MyViewHolder) holder;
 
-            viewHolder.bindItem(contact, previousContact, nextContact, contactsCount, position);
+            viewHolder.bindItem(contact, previousContactFirstLetter, nextContactFirstLetter, contactsCount, position);
         }
         else {
 //            holder.clear
@@ -106,11 +105,11 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
             this.binding = binding;
         }
 
-        public void bindItem(Contact contact, Contact previousContact, Contact nextContact, int itemCount, int position) {
+        public void bindItem(Contact contact, String previousContactFirstLetter, String nextContactFirstLetter, int itemCount, int position) {
 
             binding.setContact(contact);
-            binding.setPreviousContact(previousContact);
-            binding.setNextContact(nextContact);
+            binding.setPreviousContactFirstLetter(previousContactFirstLetter);
+            binding.setNextContactFirstLetter(nextContactFirstLetter);
             binding.setItemCount(itemCount);
             binding.setPosition(position);
             binding.executePendingBindings();

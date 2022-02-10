@@ -7,11 +7,11 @@
             name="contact"
             type="com.momid.mainactivity.data_model.Contact" />
         <variable
-            name="previousContact"
-            type="com.momid.mainactivity.data_model.Contact" />
+            name="previousContactFirstLetter"
+            type="String" />
         <variable
-            name="nextContact"
-            type="com.momid.mainactivity.data_model.Contact" />
+            name="nextContactFirstLetter"
+            type="String" />
         <variable
             name="position"
             type="int" />
@@ -35,8 +35,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:full_name="@{contact.fullName}"
-        app:previousContact="@{previousContact}"
+        app:fullNameFirstLetter="@{contact.fullName.charAt(0)}"
+        app:previousContactFirstLetter="@{previousContactFirstLetter}"
         app:position="@{position}">
 
         <View
@@ -56,8 +56,8 @@
             android:gravity="center"
             android:textColor="@color/gray3"
             tools:text="آ"
-            app:full_name="@{contact.fullName}"
-            app:previousContact="@{previousContact}"
+            app:fullNameFirstLetter="@{contact.fullName.charAt(0)}"
+            app:previousContactFirstLetter="@{previousContactFirstLetter}"
             app:position="@{position}"/>
 
     </LinearLayout>
@@ -72,7 +72,7 @@
         app:layout_constraintEnd_toStartOf="@+id/contact1_imageview"
         app:layout_constraintTop_toTopOf="@+id/contact1_imageview"
         tools:text="نام نمایشی"
-        app:full_name="@{contact.fullName}"/>
+        app:fullName="@{contact.fullName}"/>
 
     <ImageView
         android:id="@+id/contact1_imageview"
@@ -83,7 +83,7 @@
         android:layout_marginBottom="21dp"
         android:background="@drawable/round1"
         android:outlineProvider="background"
-        app:image_background="@{contact}"
+        app:imageBackground="@{contact}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/contact1_name_separator_layout" />
@@ -100,7 +100,7 @@
         app:layout_constraintStart_toStartOf="@+id/contact1_imageview"
         app:layout_constraintTop_toTopOf="@+id/contact1_imageview"
         tools:text="ن"
-        app:image_name="@{contact}"/>
+        app:imageName="@{contact}"/>
 
     <ImageButton
         android:id="@+id/contact1_call"
@@ -138,8 +138,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:full_name="@{contact.fullName}"
-        app:nextContact="@{nextContact}"
+        app:fullNameFirstLetter="@{contact.fullName.charAt(0)}"
+        app:nextContactFirstLetter="@{nextContactFirstLetter}"
         app:itemCount="@{itemCount}"
         app:position="@{position}"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
