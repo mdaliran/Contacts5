@@ -42,8 +42,14 @@ public class ContactsViewModel extends AndroidViewModel {
     private LiveData<PagedList<Contact>> contactsListLivedata;
     private LiveData<PagedList<Contact>> searchContactsListLivedata;
     private LiveData<Integer> contactsCount;
+
+    public MutableLiveData<Boolean> loading = new MutableLiveData<>();
+    public MutableLiveData<String> loadError = new MutableLiveData<>();
+    public MutableLiveData<Boolean> searchMode = new MutableLiveData<>();
+    public MutableLiveData<Boolean> contactsPermissionNeeded = new MutableLiveData<>();
+    public MutableLiveData<Boolean> noContactExists = new MutableLiveData<>();
+
     public ContactsRepositoryInterface contactsRepositoryInterface;
-    public ContactsActivityState state = new ContactsActivityState();
     private static final int PERMISSION_REQUEST_CONTACT = 0;
 
     @Inject
@@ -77,7 +83,7 @@ public class ContactsViewModel extends AndroidViewModel {
                     }
                     else {
                         if (hasContactPermission()) {
-                            state.loading.postValue(true);
+                            loading.postValue(true);
 
                             new Thread(
                                     new Runnable() {
@@ -89,7 +95,7 @@ public class ContactsViewModel extends AndroidViewModel {
                             ).start();
                         }
                         else {
-                            state.contactsPermissionNeeded.postValue(true);
+                            contactsPermissionNeeded.postValue(true);
                         }
                     }
                 }
@@ -107,7 +113,7 @@ public class ContactsViewModel extends AndroidViewModel {
 
     public void getAllContacts() {
 
-        state.loading.postValue(true);
+        loading.postValue(true);
 
         contactsRepositoryInterface.getAllContacts(allContactsRequest.getValue());
     }
@@ -127,7 +133,7 @@ public class ContactsViewModel extends AndroidViewModel {
     public void onSearchViewTextChange(String searchQuery) {
 
         if (!searchQuery.equals("")) {
-            state.searchMode.setValue(true);
+            searchMode.setValue(true);
             SearchContactsRequest request = new SearchContactsRequest();
             request.setSearchQuery(searchQuery);
             searchContacts(request);
@@ -136,12 +142,12 @@ public class ContactsViewModel extends AndroidViewModel {
 
     public void onGivePermissionClick() {
 
-        state.contactsPermissionNeeded.postValue(true);
+        contactsPermissionNeeded.postValue(true);
     }
 
     public void onSearchBackClick() {
 
-        state.searchMode.postValue(false);
+        searchMode.postValue(false);
     }
 
     public void onCall(Contact contact) {
@@ -180,7 +186,7 @@ public class ContactsViewModel extends AndroidViewModel {
     public void onPermissionGrant() {
 
         if (hasContactPermission()) {
-            state.loading.postValue(true);
+            loading.postValue(true);
 
             new Thread(new Runnable() {
                 @Override

@@ -75,7 +75,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                 if (recyclerView.getAdapter() == null) {
                     recyclerView.setAdapter(adapter);
                 }
-                viewModel.state.loading.postValue(false);
+                viewModel.loading.postValue(false);
                 adapter.notifyDataSetChanged();
             }
         });
@@ -121,7 +121,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
             }
         });
 
-        viewModel.state.contactsPermissionNeeded.observe(this, new Observer<Boolean>() {
+        viewModel.contactsPermissionNeeded.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
@@ -152,12 +152,12 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
 
     @Override
     public void onGivePermissionClick() {
-        viewModel.state.contactsPermissionNeeded.postValue(true);
+        viewModel.contactsPermissionNeeded.postValue(true);
     }
 
     @Override
     public void onSearchBackClick() {
-        viewModel.state.searchMode.postValue(false);
+        viewModel.searchMode.postValue(false);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
 
         if (requestCode == PERMISSION_REQUEST_CONTACT) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                viewModel.state.contactsPermissionNeeded.setValue(false);
+                viewModel.contactsPermissionNeeded.setValue(false);
             }
             else {
                 startPermissionDeniedMode();
@@ -176,8 +176,8 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
 
     @Override
     public void onBackPressed() {
-        if (viewModel.state.searchMode.getValue() != null && viewModel.state.searchMode.getValue()) {
-            viewModel.state.searchMode.setValue(false);
+        if (viewModel.searchMode.getValue() != null && viewModel.searchMode.getValue()) {
+            viewModel.searchMode.setValue(false);
         }
         else {
             super.onBackPressed();

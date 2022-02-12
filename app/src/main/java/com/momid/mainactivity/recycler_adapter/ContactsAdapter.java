@@ -2,6 +2,7 @@ package com.momid.mainactivity.recycler_adapter;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -99,10 +100,22 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
         public void bindItem(Contact contact, String previousContactFirstLetter, String nextContactFirstLetter, int itemCount, int position) {
 
             binding.setContact(contact);
-            binding.setPreviousContactFirstLetter(previousContactFirstLetter);
-            binding.setNextContactFirstLetter(nextContactFirstLetter);
-            binding.setItemCount(itemCount);
-            binding.setPosition(position);
+
+            boolean showNameSeparator = false;
+            if (position == 0) {
+                showNameSeparator = true;
+            }
+            if (position > 0 && !(String.valueOf(contact.getFullName().charAt(0))).equals(previousContactFirstLetter)) {
+                showNameSeparator = true;
+            }
+
+            boolean hideBottomSeparator = false;
+            if (position < itemCount - 1 && !(String.valueOf(contact.getFullName()).equals(nextContactFirstLetter))) {
+                hideBottomSeparator = true;
+            }
+
+            binding.setShowNameSeparator(showNameSeparator);
+            binding.setHideBottomSeparator(hideBottomSeparator);
             binding.executePendingBindings();
         }
     }
