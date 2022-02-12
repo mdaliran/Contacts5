@@ -105,12 +105,12 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
             if (position == 0) {
                 showNameSeparator = true;
             }
-            if (position > 0 && !(String.valueOf(contact.getFullName().charAt(0))).equals(previousContactFirstLetter)) {
+            if (position > 0 && !(String.valueOf(contact.getFirstLetter())).equals(previousContactFirstLetter)) {
                 showNameSeparator = true;
             }
 
             boolean hideBottomSeparator = false;
-            if (position < itemCount - 1 && !(String.valueOf(contact.getFullName()).equals(nextContactFirstLetter))) {
+            if (position < itemCount - 1 && !(String.valueOf(contact.getFirstLetter()).equals(nextContactFirstLetter))) {
                 hideBottomSeparator = true;
             }
 
