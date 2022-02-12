@@ -24,6 +24,8 @@ public class Contact {
     private String address;
     @ColumnInfo(name = "image_uri")
     private String imageUri;
+    @Ignore
+    private String firstLetter;
 
     public int getId() {
         return id;
@@ -63,6 +65,7 @@ public class Contact {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+        this.firstLetter = String.valueOf(fullName.charAt(0));
     }
 
     public String getPhoneNumber() {
@@ -87,5 +90,13 @@ public class Contact {
 
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
+    }
+
+    public String getFirstLetter() {
+        return firstLetter;
+    }
+
+    public void setFirstLetter(String firstLetter) {
+        this.firstLetter = firstLetter;
     }
 }

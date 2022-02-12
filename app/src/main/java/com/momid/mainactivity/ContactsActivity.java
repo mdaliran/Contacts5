@@ -3,14 +3,12 @@ package com.momid.mainactivity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +20,7 @@ import android.widget.SearchView;
 import com.momid.mainactivity.data_model.Contact;
 import com.momid.mainactivity.databinding.ActivityContactsBinding;
 import com.momid.mainactivity.recycler_adapter.ContactsAdapter;
-import com.momid.mainactivity.response_model.ContactsListResponse;
+import com.momid.mainactivity.recycler_adapter.OnItemClick;
 
 import java.util.List;
 
@@ -82,7 +80,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
             }
         });
 
-        adapter = new ContactsAdapter(new ContactsAdapter.OnItemClick() {
+        adapter = new ContactsAdapter(new OnItemClick() {
             @Override
             public void onItemClick(Contact contact) {
 

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.momid.mainactivity.data_model.Contact;
 import com.momid.mainactivity.databinding.FragmentSearchContactsBinding;
 import com.momid.mainactivity.recycler_adapter.ContactsAdapter;
-import com.momid.mainactivity.response_model.ContactsListResponse;
+import com.momid.mainactivity.recycler_adapter.OnItemClick;
 
 import java.util.List;
 
@@ -62,7 +62,7 @@ public class SearchContactsFragment extends Fragment {
         binding.setLifecycleOwner(requireActivity());
         binding.setViewmodel(viewModel);
 
-        adapter = new ContactsAdapter(new ContactsAdapter.OnItemClick() {
+        adapter = new ContactsAdapter(new OnItemClick() {
             @Override
             public void onItemClick(Contact contact) {
 
