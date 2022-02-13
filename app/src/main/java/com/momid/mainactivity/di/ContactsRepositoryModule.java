@@ -1,7 +1,7 @@
 package com.momid.mainactivity.di;
 
 import com.momid.mainactivity.repository.ContactsRepository;
-import com.momid.mainactivity.repository.ContactsRepositoryInterface;
+import com.momid.mainactivity.repository.ContactsRepositoryImpl;
 
 import dagger.Binds;
 import dagger.Module;
@@ -13,5 +13,5 @@ import dagger.hilt.android.components.ViewModelComponent;
 public abstract class ContactsRepositoryModule {
 
     @Binds
-    public abstract ContactsRepositoryInterface bindContactsRepository(ContactsRepository contactsRepository);
+    public abstract ContactsRepository bindContactsRepository(ContactsRepositoryImpl contactsRepositoryImpl);
 }

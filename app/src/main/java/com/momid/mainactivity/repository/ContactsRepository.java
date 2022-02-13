@@ -4,51 +4,21 @@ import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 
 import com.momid.mainactivity.data_model.Contact;
-import com.momid.mainactivity.database.ContactsDao;
 import com.momid.mainactivity.request_model.AllContactsRequest;
 import com.momid.mainactivity.request_model.SearchContactsRequest;
 
 import java.util.List;
 
-import javax.inject.Inject;
+public interface ContactsRepository {
 
-public class ContactsRepository implements ContactsRepositoryInterface {
 
-    public ContactsDao contactsDao;
+    DataSource.Factory<Integer, Contact> getAllContacts(AllContactsRequest request);
 
-    @Inject
-    public ContactsRepository(ContactsDao contactsDao) {
+    DataSource.Factory<Integer, Contact> searchContacts(SearchContactsRequest request);
 
-        this.contactsDao = contactsDao;
-    }
+    void insertContactsToDatabase(List<Contact> contacts);
 
-    @Override
-    public DataSource.Factory<Integer, Contact> getAllContacts(AllContactsRequest request) {
+    LiveData<Integer> getContactsCount();
 
-        return contactsDao.getAllContacts();
-    }
-
-    @Override
-    public DataSource.Factory<Integer, Contact> searchContacts(SearchContactsRequest request) {
-
-        return contactsDao.searchContacts(request.getSearchQuery());
-    }
-
-    @Override
-    public void insertContactsToDatabase(List<Contact> contacts) {
-
-        contactsDao.addAllContacts(contacts);
-    }
-
-    @Override
-    public LiveData<Integer> getContactsCount() {
-
-        return contactsDao.getAllContactsCount();
-    }
-
-    @Override
-    public LiveData<Integer> getSearchContactsCount(String searchQuery) {
-
-        return contactsDao.searchContactsCount(searchQuery);
-    }
+    LiveData<Integer> getSearchContactsCount(String searchQuery);
 }

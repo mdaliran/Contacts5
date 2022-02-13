@@ -6,19 +6,12 @@ import androidx.room.Room;
 
 import com.momid.mainactivity.database.ContactsDao;
 import com.momid.mainactivity.database.ContactsDatabase;
-import com.momid.mainactivity.repository.ContactsRepository;
-import com.momid.mainactivity.repository.ContactsRepositoryInterface;
 
-import javax.inject.Inject;
-
-import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
-import dagger.hilt.android.components.ActivityComponent;
 import dagger.hilt.android.components.ViewModelComponent;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 
 @Module
 @InstallIn(ViewModelComponent.class)

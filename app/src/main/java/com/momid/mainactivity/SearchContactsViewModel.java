@@ -1,27 +1,20 @@
 package com.momid.mainactivity;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.arch.core.util.Function;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
 import com.momid.mainactivity.data_model.Contact;
-import com.momid.mainactivity.repository.ContactsRepositoryInterface;
-import com.momid.mainactivity.request_model.AllContactsRequest;
+import com.momid.mainactivity.repository.ContactsRepository;
 import com.momid.mainactivity.request_model.SearchContactsRequest;
 
 import javax.inject.Inject;
@@ -36,12 +29,12 @@ public class SearchContactsViewModel extends AndroidViewModel {
 
     public MutableLiveData<Boolean> searchMode = new MutableLiveData<>();
 
-    public ContactsRepositoryInterface contactsRepositoryInterface;
+    public ContactsRepository contactsRepository;
 
     @Inject
-    public SearchContactsViewModel(Application application, ContactsRepositoryInterface contactsRepositoryInterface) {
+    public SearchContactsViewModel(Application application, ContactsRepository contactsRepository) {
         super(application);
-        this.contactsRepositoryInterface = contactsRepositoryInterface;
+        this.contactsRepository = contactsRepository;
     }
 
     public void init() {
@@ -52,7 +45,7 @@ public class SearchContactsViewModel extends AndroidViewModel {
             searchContactsListLivedata = Transformations.switchMap(searchContactsRequest, new Function<SearchContactsRequest, LiveData<PagedList<Contact>>>() {
                 @Override
                 public LiveData<PagedList<Contact>> apply(SearchContactsRequest input) {
-                    return new LivePagedListBuilder<Integer, Contact>(contactsRepositoryInterface.searchContacts(searchContactsRequest.getValue()), 25).build();
+                    return new LivePagedListBuilder<Integer, Contact>(contactsRepository.searchContacts(searchContactsRequest.getValue()), 25).build();
                 }
             });
         }
