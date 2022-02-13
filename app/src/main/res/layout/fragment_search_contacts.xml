@@ -5,7 +5,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewmodel"
-            type="com.momid.mainactivity.ContactsViewModel" />
+            type="com.momid.mainactivity.SearchContactsViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:tools="http://schemas.android.com/tools"

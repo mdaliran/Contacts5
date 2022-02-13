@@ -29,7 +29,7 @@ public class SearchContactsFragment extends Fragment {
     private ContactsAdapter adapter;
     private LinearLayoutManager layoutManager;
     private TextView nothingFound;
-    private ContactsViewModel viewModel;
+    private SearchContactsViewModel viewModel;
     private FragmentSearchContactsBinding binding;
 
 
@@ -57,7 +57,9 @@ public class SearchContactsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.search_contacts_recycler);
         nothingFound = view.findViewById(R.id.search_contacts_nothing_found);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(ContactsViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SearchContactsViewModel.class);
+
+        viewModel.init();
 
         binding.setLifecycleOwner(requireActivity());
         binding.setViewmodel(viewModel);

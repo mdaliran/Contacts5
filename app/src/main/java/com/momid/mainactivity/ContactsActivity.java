@@ -30,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ContactsActivity extends AppCompatActivity implements ContactsClickListener {
 
     public ContactsViewModel viewModel;
+    public SearchContactsViewModel searchContactsViewModel;
     private RecyclerView recyclerView;
     private ContactsAdapter adapter;
     private LinearLayoutManager layoutManager;
@@ -63,6 +64,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         loadingLayout = binding.contactsLoadingLayout;
 
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
+        searchContactsViewModel = new ViewModelProvider(this).get(SearchContactsViewModel.class);
 
         binding.setViewmodel(viewModel);
         binding.setClickListener(this);
@@ -117,6 +119,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
             @Override
             public boolean onQueryTextChange(String s) {
                 viewModel.onSearchViewTextChange(s);
+                searchContactsViewModel.onSearchViewTextChange(s);
                 return true;
             }
         });
