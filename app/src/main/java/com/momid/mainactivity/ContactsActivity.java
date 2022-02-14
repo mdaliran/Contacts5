@@ -133,7 +133,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                 }
                 else {
                     endPermissionMode();
-                    viewModel.onPermissionGrant(getApplicationContext());
+                    viewModel.onPermissionGrant();
                 }
             }
         });

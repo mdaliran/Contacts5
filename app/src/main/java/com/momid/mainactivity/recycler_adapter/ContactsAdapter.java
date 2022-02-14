@@ -46,7 +46,7 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
             String previousContactFirstLetter = position > 0 ? String.valueOf(getItem(position - 1).getFirstLetter()) : "";
             String nextContactFirstLetter = position < getItemCount() - 2 ? String.valueOf(getItem(position + 1).getFirstLetter()) : "";
             int contactsCount = getItemCount();
-            ((ContactsViewHolder) holder).bindItem(contact, previousContactFirstLetter, nextContactFirstLetter, contactsCount, position);
+            ((ContactsViewHolder) holder).bindItem(contact, previousContactFirstLetter, nextContactFirstLetter, contactsCount);
         }
         else {
 //            holder.clear
@@ -97,13 +97,18 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
             this.binding = binding;
         }
 
-        public void bindItem(Contact contact, String previousContactFirstLetter, String nextContactFirstLetter, int itemCount, int position) {
+        public void bindItem(Contact contact, String previousContactFirstLetter, String nextContactFirstLetter, int itemCount) {
+
+            int position = getAdapterPosition();
 
             binding.setContact(contact);
 
             boolean showNameSeparator = position == 0 || (position > 0 && !(String.valueOf(contact.getFirstLetter())).equals(previousContactFirstLetter));
 
             boolean hideBottomSeparator = position < itemCount - 1 && !(String.valueOf(contact.getFirstLetter()).equals(nextContactFirstLetter));
+            if (position < itemCount - 1 && !(String.valueOf(contact.getFirstLetter()).equals(nextContactFirstLetter))) {
+                hideBottomSeparator = true;
+            }
 
             binding.setShowNameSeparator(showNameSeparator);
             binding.setHideBottomSeparator(hideBottomSeparator);

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
@@ -21,12 +20,9 @@ import com.momid.mainactivity.data_model.Contact;
 import com.momid.mainactivity.repository.ContactsRepository;
 import com.momid.mainactivity.request_model.AllContactsRequest;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import dagger.hilt.android.qualifiers.ApplicationContext;
 
 @HiltViewModel
 public class ContactsViewModel extends ViewModel {
@@ -45,16 +41,18 @@ public class ContactsViewModel extends ViewModel {
 
     public ContactsRepository contactsRepository;
     public ContactsGetter contactsGetter;
+    public PermissionHelper permissionHelper;
+
     private static final int PERMISSION_REQUEST_CONTACT = 0;
 
     @Inject
-    public ContactsViewModel(@ApplicationContext Context context, ContactsRepository contactsRepository, ContactsGetter contactsGetter) {
+    public ContactsViewModel(ContactsRepository contactsRepository, ContactsGetter contactsGetter, PermissionHelper permissionHelper) {
 
         if (contactsListLivedata == null) {
 
             this.contactsRepository = contactsRepository;
-
             this.contactsGetter = contactsGetter;
+            this.permissionHelper = permissionHelper;
 
             allContactsRequest = new MutableLiveData<>();
 
@@ -70,7 +68,7 @@ public class ContactsViewModel extends ViewModel {
                         Log.d("", "contacts count are changed");
                     }
                     else {
-                        if (hasContactPermission(context)) {
+                        if (permissionHelper.hasContactsPermission()) {
                             loading.postValue(true);
 
                             new Thread(
@@ -157,14 +155,9 @@ public class ContactsViewModel extends ViewModel {
         }
     }
 
-    public boolean hasContactPermission(Context context) {
+    public void onPermissionGrant() {
 
-        return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public void onPermissionGrant(Context context) {
-
-        if (hasContactPermission(context)) {
+        if (permissionHelper.hasContactsPermission()) {
             loading.postValue(true);
 
             new Thread(new Runnable() {
