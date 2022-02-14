@@ -2,45 +2,37 @@ package com.momid.mainactivity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.arch.core.util.Function;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.Transformations;
+import androidx.lifecycle.ViewModel;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
 import com.momid.mainactivity.data_model.Contact;
 import com.momid.mainactivity.repository.ContactsRepository;
-import com.momid.mainactivity.repository.ContactsRepositoryInterface;
-import com.momid.mainactivity.repository.DataCallback;
 import com.momid.mainactivity.request_model.AllContactsRequest;
-import com.momid.mainactivity.request_model.SearchContactsRequest;
-import com.momid.mainactivity.response_model.ContactsListResponse;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 @HiltViewModel
-public class ContactsViewModel extends AndroidViewModel {
+public class ContactsViewModel extends ViewModel {
 
-    private MutableLiveData<AllContactsRequest> allContactsRequest;
-    private MutableLiveData<SearchContactsRequest> searchContactsRequest;
+    private MutableLiveData<AllContactsRequest> allContactsRequest = new MutableLiveData<>();
     private LiveData<PagedList<Contact>> contactsListLivedata;
-    private LiveData<PagedList<Contact>> searchContactsListLivedata;
     private LiveData<Integer> contactsCount;
 
     public MutableLiveData<Boolean> loading = new MutableLiveData<>();
@@ -49,30 +41,26 @@ public class ContactsViewModel extends AndroidViewModel {
     public MutableLiveData<Boolean> contactsPermissionNeeded = new MutableLiveData<>();
     public MutableLiveData<Boolean> noContactExists = new MutableLiveData<>();
 
-    public ContactsRepositoryInterface contactsRepositoryInterface;
+    public MutableLiveData<String> errorMessageLiveDate = new MutableLiveData<>();
+
+    public ContactsRepository contactsRepository;
+    public ContactsGetter contactsGetter;
     private static final int PERMISSION_REQUEST_CONTACT = 0;
 
     @Inject
-    public ContactsViewModel(Application application, ContactsRepositoryInterface contactsRepositoryInterface) {
-        super(application);
-        this.contactsRepositoryInterface = contactsRepositoryInterface;
-    }
+    public ContactsViewModel(@ApplicationContext Context context, ContactsRepository contactsRepository, ContactsGetter contactsGetter) {
 
-    public void init() {
         if (contactsListLivedata == null) {
 
-            allContactsRequest = new MutableLiveData<AllContactsRequest>();
-            searchContactsRequest = new MutableLiveData<SearchContactsRequest>();
+            this.contactsRepository = contactsRepository;
 
-            contactsListLivedata = new LivePagedListBuilder<Integer, Contact>(contactsRepositoryInterface.getAllContacts(allContactsRequest.getValue()), 25).build();
-            searchContactsListLivedata = Transformations.switchMap(searchContactsRequest, new Function<SearchContactsRequest, LiveData<PagedList<Contact>>>() {
-                @Override
-                public LiveData<PagedList<Contact>> apply(SearchContactsRequest input) {
-                    return new LivePagedListBuilder<Integer, Contact>(contactsRepositoryInterface.searchContacts(searchContactsRequest.getValue()), 25).build();
-                }
-            });
+            this.contactsGetter = contactsGetter;
 
-            contactsCount = contactsRepositoryInterface.getContactsCount();
+            allContactsRequest = new MutableLiveData<>();
+
+            contactsListLivedata = new LivePagedListBuilder<>(contactsRepository.getAllContacts(allContactsRequest.getValue()), 25).build();
+
+            contactsCount = contactsRepository.getContactsCount();
 
             contactsCount.observeForever(new Observer<Integer>() {
                 @Override
@@ -82,14 +70,14 @@ public class ContactsViewModel extends AndroidViewModel {
                         Log.d("", "contacts count are changed");
                     }
                     else {
-                        if (hasContactPermission()) {
+                        if (hasContactPermission(context)) {
                             loading.postValue(true);
 
                             new Thread(
                                     new Runnable() {
                                         @Override
                                         public void run() {
-                                            contactsRepositoryInterface.insertContactsToDatabase(ContactsGetter.getAllContactsOnThisDevice(getApplication()));
+                                            contactsRepository.insertContactsToDatabase(contactsGetter.startToGetContactsOnDevice());
                                         }
                                     }
                             ).start();
@@ -103,24 +91,18 @@ public class ContactsViewModel extends AndroidViewModel {
         }
     }
 
-    public LiveData<PagedList<Contact>> getContactsListLivedata() {
-        return contactsListLivedata;
+    public void init() {
     }
 
-    public LiveData<PagedList<Contact>> getSearchContactsListLivedata() {
-        return searchContactsListLivedata;
+    public LiveData<PagedList<Contact>> getContactsListLivedata() {
+        return contactsListLivedata;
     }
 
     public void getAllContacts() {
 
         loading.postValue(true);
 
-        contactsRepositoryInterface.getAllContacts(allContactsRequest.getValue());
-    }
-
-    public void searchContacts(SearchContactsRequest request) {
-
-        this.searchContactsRequest.postValue(request);
+        contactsRepository.getAllContacts(allContactsRequest.getValue());
     }
 
     public void askForPermission(Activity activity) {
@@ -134,9 +116,6 @@ public class ContactsViewModel extends AndroidViewModel {
 
         if (!searchQuery.equals("")) {
             searchMode.setValue(true);
-            SearchContactsRequest request = new SearchContactsRequest();
-            request.setSearchQuery(searchQuery);
-            searchContacts(request);
         }
     }
 
@@ -150,48 +129,48 @@ public class ContactsViewModel extends AndroidViewModel {
         searchMode.postValue(false);
     }
 
-    public void onCall(Contact contact) {
+    public void onCall(Context context, String contactPhoneNumber) {
 
-        if (contact.getPhoneNumber() != null && !contact.getPhoneNumber().equals("0")) {
+        if (contactPhoneNumber != null && !contactPhoneNumber.equals("0")) {
             Intent callIntent = new Intent(Intent.ACTION_DIAL);
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            callIntent.setData(Uri.parse("tel:" + contact.getPhoneNumber()));
-            getApplication().startActivity(callIntent);
+            callIntent.setData(Uri.parse("tel:" + contactPhoneNumber));
+            context.startActivity(callIntent);
         }
         else {
-            Toast.makeText(getApplication(), "شماره موجود نیست", Toast.LENGTH_LONG).show();
+            errorMessageLiveDate.postValue("phone number doesn't exist");
         }
     }
 
-    public void onMessage(Contact contact) {
+    public void onMessage(Context context, String contactPhoneNumber) {
 
-        if (contact.getPhoneNumber() != null && !contact.getPhoneNumber().equals("0")) {
+        if (contactPhoneNumber != null && !contactPhoneNumber.equals("0")) {
             Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("smsto:" + contact.getPhoneNumber())); // This ensures only SMS apps respond
+            intent.setData(Uri.parse("smsto:" + contactPhoneNumber)); // This ensures only SMS apps respond
             intent.putExtra("sms_body", "hello, it's me.");
-            if (intent.resolveActivity(getApplication().getPackageManager()) != null) {
-                getApplication().startActivity(intent);
+            if (intent.resolveActivity(context.getPackageManager()) != null) {
+                context.startActivity(intent);
             }
         }
         else {
-            Toast.makeText(getApplication(), "شماره موجود نیست", Toast.LENGTH_LONG).show();
+            errorMessageLiveDate.postValue("phone number doesn't exist");
         }
     }
 
-    public boolean hasContactPermission() {
+    public boolean hasContactPermission(Context context) {
 
-        return ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
     }
 
-    public void onPermissionGrant() {
+    public void onPermissionGrant(Context context) {
 
-        if (hasContactPermission()) {
+        if (hasContactPermission(context)) {
             loading.postValue(true);
 
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    contactsRepositoryInterface.insertContactsToDatabase(ContactsGetter.getAllContactsOnThisDevice(getApplication()));
+                    contactsRepository.insertContactsToDatabase(contactsGetter.startToGetContactsOnDevice());
                 }
             }).start();
         }

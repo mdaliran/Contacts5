@@ -1,6 +1,7 @@
 package com.momid.mainactivity;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -20,8 +21,14 @@ import java.util.List;
 
 public class ContactsGetter {
 
+    private final Application context;
+
+    public ContactsGetter(Application context) {
+        this.context = context;
+    }
+
     @SuppressLint("Range")
-    public static List<Contact> getAllContactsOnThisDevice(Context context) {
+    public List<Contact> startToGetContactsOnDevice() {
         List<Contact> list = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.momid.mainactivity.data_model.Contact;
 import com.momid.mainactivity.databinding.ActivityContactsBinding;
@@ -90,12 +91,12 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
 
             @Override
             public void onCallClick(Contact contact) {
-                viewModel.onCall(contact);
+                viewModel.onCall(getApplicationContext(), contact.getPhoneNumber());
             }
 
             @Override
             public void onSmsClick(Contact contact) {
-                viewModel.onMessage(contact);
+                viewModel.onMessage(getApplicationContext(), contact.getPhoneNumber());
             }
         });
         layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -132,8 +133,15 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                 }
                 else {
                     endPermissionMode();
-                    viewModel.onPermissionGrant();
+                    viewModel.onPermissionGrant(getApplicationContext());
                 }
+            }
+        });
+
+        viewModel.errorMessageLiveDate.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             }
         });
     }

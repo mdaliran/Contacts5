@@ -40,12 +40,12 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         Contact contact = getItem(position);
-        String previousContactFirstLetter = position > 0 ? String.valueOf(getItem(position - 1).getFirstLetter()) : "";
-        String nextContactFirstLetter = position < getItemCount() - 2 ? String.valueOf(getItem(position + 1).getFirstLetter()) : "";
-        int contactsCount = getItemCount() - 1;
 
         if (contact != null) {
 
+            String previousContactFirstLetter = position > 0 ? String.valueOf(getItem(position - 1).getFirstLetter()) : "";
+            String nextContactFirstLetter = position < getItemCount() - 2 ? String.valueOf(getItem(position + 1).getFirstLetter()) : "";
+            int contactsCount = getItemCount();
             ((ContactsViewHolder) holder).bindItem(contact, previousContactFirstLetter, nextContactFirstLetter, contactsCount, position);
         }
         else {
@@ -101,18 +101,9 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
 
             binding.setContact(contact);
 
-            boolean showNameSeparator = false;
-            if (position == 0) {
-                showNameSeparator = true;
-            }
-            if (position > 0 && !(String.valueOf(contact.getFirstLetter())).equals(previousContactFirstLetter)) {
-                showNameSeparator = true;
-            }
+            boolean showNameSeparator = position == 0 || (position > 0 && !(String.valueOf(contact.getFirstLetter())).equals(previousContactFirstLetter));
 
-            boolean hideBottomSeparator = false;
-            if (position < itemCount - 1 && !(String.valueOf(contact.getFirstLetter()).equals(nextContactFirstLetter))) {
-                hideBottomSeparator = true;
-            }
+            boolean hideBottomSeparator = position < itemCount - 1 && !(String.valueOf(contact.getFirstLetter()).equals(nextContactFirstLetter));
 
             binding.setShowNameSeparator(showNameSeparator);
             binding.setHideBottomSeparator(hideBottomSeparator);

@@ -19,39 +19,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/contact1_name_separator_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingTop="24dp"
-        android:paddingBottom="0dp"
-        android:visibility="@{showNameSeparator ? View.VISIBLE : View.GONE}"
-        app:layout_constraintEnd_toEndOf="parent"
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_weight="1"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toStartOf="@+id/contact1_name_separator_name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="@{showNameSeparator ? View.VISIBLE : View.GONE}"/>
 
-        <View
-            android:id="@+id/divider5"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginRight="8dp"
-            android:layout_weight="1"
-            android:background="?android:attr/listDivider" />
-
-        <TextView
-            android:id="@+id/contact1_name_separator_name"
-            android:layout_width="35dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp"
-            android:gravity="center"
-            android:textColor="@color/gray3"
-            tools:text="آ"
-            android:text="@{showNameSeparator ? contact.getFirstLetter() : contact.fullName}"/>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/contact1_name_separator_name"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:text="@{showNameSeparator ? contact.getFirstLetter() : contact.fullName}"
+        android:textColor="@color/gray3"
+        app:layout_constraintBottom_toBottomOf="@+id/divider5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/divider5"
+        tools:text="آ"
+        android:visibility="@{showNameSeparator ? View.VISIBLE : View.GONE}"/>
 
     <TextView
         android:id="@+id/contact1_name"
@@ -74,10 +67,10 @@
         android:layout_marginBottom="21dp"
         android:background="@drawable/round1"
         android:outlineProvider="background"
-        app:imageBackground="@{contact}"
+        app:imageBackground="@{contact.imageUri}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contact1_name_separator_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/divider5" />
 
     <TextView
         android:id="@+id/contact1_image_name"
@@ -91,7 +84,7 @@
         app:layout_constraintStart_toStartOf="@+id/contact1_imageview"
         app:layout_constraintTop_toTopOf="@+id/contact1_imageview"
         tools:text="ن"
-        android:text="@{!TextUtils.isEmpty(contact.getImageUri()) ? contact.getFullName().charAt(0) : null}"/>
+        android:text='@{TextUtils.isEmpty(contact.getImageUri()) ? contact.firstLetter : ""}'/>
 
     <ImageButton
         android:id="@+id/contact1_call"
@@ -99,12 +92,12 @@
         android:layout_height="39dp"
         android:layout_marginStart="35dp"
         android:background="@drawable/round1"
-        android:backgroundTint="#3B0FA11D"
-        android:tint="#0E7819"
+        android:backgroundTint="@color/call_background"
         app:layout_constraintBottom_toBottomOf="@+id/contact1_imageview"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/contact1_imageview"
-        app:srcCompat="@drawable/call" />
+        app:srcCompat="@drawable/call"
+        app:tint="@color/call_tint" />
 
     <ImageButton
         android:id="@+id/contact1_sms"
@@ -112,12 +105,12 @@
         android:layout_height="39dp"
         android:layout_marginStart="16dp"
         android:background="@drawable/round1"
-        android:backgroundTint="#3BD69209"
-        android:tint="#936310"
+        android:backgroundTint="@color/message_background"
         app:layout_constraintBottom_toBottomOf="@+id/contact1_call"
         app:layout_constraintStart_toEndOf="@+id/contact1_call"
         app:layout_constraintTop_toTopOf="@+id/contact1_call"
-        app:srcCompat="@drawable/sms" />
+        app:srcCompat="@drawable/sms"
+        app:tint="@color/message_tint" />
 
     <View
         android:id="@+id/contact1_divider"

@@ -1,6 +1,7 @@
 package com.momid.mainactivity;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
+import androidx.lifecycle.ViewModel;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
@@ -22,30 +24,30 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
-public class SearchContactsViewModel extends AndroidViewModel {
+public class SearchContactsViewModel extends ViewModel {
 
     private MutableLiveData<SearchContactsRequest> searchContactsRequest;
     private LiveData<PagedList<Contact>> searchContactsListLivedata;
 
     public MutableLiveData<Boolean> searchMode = new MutableLiveData<>();
 
+    public MutableLiveData<String> errorMessageLiveDate = new MutableLiveData<>();
+
     public ContactsRepository contactsRepository;
 
     @Inject
-    public SearchContactsViewModel(Application application, ContactsRepository contactsRepository) {
-        super(application);
-        this.contactsRepository = contactsRepository;
-    }
+    public SearchContactsViewModel(ContactsRepository contactsRepository) {
 
-    public void init() {
         if (searchContactsListLivedata == null) {
 
-            searchContactsRequest = new MutableLiveData<SearchContactsRequest>();
+            this.contactsRepository = contactsRepository;
+
+            searchContactsRequest = new MutableLiveData<>();
 
             searchContactsListLivedata = Transformations.switchMap(searchContactsRequest, new Function<SearchContactsRequest, LiveData<PagedList<Contact>>>() {
                 @Override
                 public LiveData<PagedList<Contact>> apply(SearchContactsRequest input) {
-                    return new LivePagedListBuilder<Integer, Contact>(contactsRepository.searchContacts(searchContactsRequest.getValue()), 25).build();
+                    return new LivePagedListBuilder<>(contactsRepository.searchContacts(searchContactsRequest.getValue()), 25).build();
                 }
             });
         }
@@ -69,31 +71,31 @@ public class SearchContactsViewModel extends AndroidViewModel {
         }
     }
 
-    public void onCall(Contact contact) {
+    public void onCall(Context context, String contactPhoneNumber) {
 
-        if (contact.getPhoneNumber() != null && !contact.getPhoneNumber().equals("0")) {
+        if (contactPhoneNumber != null && !contactPhoneNumber.equals("0")) {
             Intent callIntent = new Intent(Intent.ACTION_DIAL);
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            callIntent.setData(Uri.parse("tel:" + contact.getPhoneNumber()));
-            getApplication().startActivity(callIntent);
+            callIntent.setData(Uri.parse("tel:" + contactPhoneNumber));
+            context.startActivity(callIntent);
         }
         else {
-            Toast.makeText(getApplication(), "شماره موجود نیست", Toast.LENGTH_LONG).show();
+            errorMessageLiveDate.postValue("phone number doesn't exist");
         }
     }
 
-    public void onMessage(Contact contact) {
+    public void onMessage(Context context, String contactPhoneNumber) {
 
-        if (contact.getPhoneNumber() != null && !contact.getPhoneNumber().equals("0")) {
+        if (contactPhoneNumber != null && !contactPhoneNumber.equals("0")) {
             Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("smsto:" + contact.getPhoneNumber())); // This ensures only SMS apps respond
+            intent.setData(Uri.parse("smsto:" + contactPhoneNumber)); // This ensures only SMS apps respond
             intent.putExtra("sms_body", "hello, it's me.");
-            if (intent.resolveActivity(getApplication().getPackageManager()) != null) {
-                getApplication().startActivity(intent);
+            if (intent.resolveActivity(context.getPackageManager()) != null) {
+                context.startActivity(intent);
             }
         }
         else {
-            Toast.makeText(getApplication(), "شماره موجود نیست", Toast.LENGTH_LONG).show();
+            errorMessageLiveDate.postValue("phone number doesn't exist");
         }
     }
 

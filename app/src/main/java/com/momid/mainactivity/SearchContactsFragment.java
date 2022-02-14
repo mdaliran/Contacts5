@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.momid.mainactivity.data_model.Contact;
 import com.momid.mainactivity.databinding.FragmentSearchContactsBinding;
@@ -59,8 +60,6 @@ public class SearchContactsFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(SearchContactsViewModel.class);
 
-        viewModel.init();
-
         binding.setLifecycleOwner(requireActivity());
         binding.setViewmodel(viewModel);
 
@@ -72,16 +71,16 @@ public class SearchContactsFragment extends Fragment {
 
             @Override
             public void onCallClick(Contact contact) {
-                viewModel.onCall(contact);
+                viewModel.onCall(getContext(), contact.getPhoneNumber());
             }
 
             @Override
             public void onSmsClick(Contact contact) {
-                viewModel.onMessage(contact);
+                viewModel.onMessage(getContext(), contact.getPhoneNumber());
             }
         });
+
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-//        adapter.enableLoadMore();
         recyclerView.setLayoutManager(layoutManager);
         viewModel.getSearchContactsListLivedata().observe(requireActivity(), adapter::submitList);
         recyclerView.setAdapter(adapter);
@@ -93,13 +92,13 @@ public class SearchContactsFragment extends Fragment {
             public void onChanged(List<Contact> contacts) {
                 adapter.setContacts(contacts);
                 adapter.notifyDataSetChanged();
+            }
+        });
 
-//                if (contacts.isEmpty()) {
-//                    nothingFound.setVisibility(View.VISIBLE);
-//                }
-//                else {
-//                    nothingFound.setVisibility(View.INVISIBLE);
-//                }
+        viewModel.errorMessageLiveDate.observe(requireActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show();
             }
         });
     }

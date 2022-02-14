@@ -32,4 +32,8 @@
     <color name="contact_color5">#3782DD</color>
     <color name="contact_color6">#EA5348</color>
     <color name="contact_color7">#0DC7DF</color>
+    <color name="call_background">#3B0FA11D</color>
+    <color name="call_tint">#0E7819</color>
+    <color name="message_background">#3BD69209</color>
+    <color name="message_tint">#936310</color>
 </resources>
