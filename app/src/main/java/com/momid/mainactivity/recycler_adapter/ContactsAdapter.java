@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.ViewHolder> {
 
-    private List<Contact> contacts;
+
     private OnItemClick onItemClick;
 
     public ContactsAdapter(OnItemClick onItemClick) {
@@ -32,8 +32,7 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         ItemContactBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_contact, parent, false);
-        RecyclerView.ViewHolder viewHolder = new ContactsViewHolder(binding);
-        return viewHolder;
+        return new ContactsViewHolder(binding);
     }
 
     @Override
@@ -45,30 +44,11 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
 
             String previousContactFirstLetter = position > 0 ? String.valueOf(getItem(position - 1).getFirstLetter()) : "";
             String nextContactFirstLetter = position < getItemCount() - 2 ? String.valueOf(getItem(position + 1).getFirstLetter()) : "";
-            int contactsCount = getItemCount();
-            ((ContactsViewHolder) holder).bindItem(contact, previousContactFirstLetter, nextContactFirstLetter, contactsCount);
+            ((ContactsViewHolder) holder).bindItem(contact, previousContactFirstLetter, nextContactFirstLetter, getItemCount());
         }
         else {
 //            holder.clear
         }
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position;
-    }
-
-    public List<Contact> getContacts() {
-        return contacts;
-    }
-
-    public void setContacts(List<Contact> contacts) {
-        this.contacts = contacts;
     }
 
     private static DiffUtil.ItemCallback<Contact> DIFF_CALLBACK =
@@ -90,7 +70,7 @@ public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.View
 
     public static class ContactsViewHolder extends RecyclerView.ViewHolder {
 
-        public ItemContactBinding binding;
+        private final ItemContactBinding binding;
 
         public ContactsViewHolder(ItemContactBinding binding) {
             super(binding.getRoot());

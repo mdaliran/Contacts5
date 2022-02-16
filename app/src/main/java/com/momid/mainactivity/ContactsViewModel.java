@@ -89,9 +89,6 @@ public class ContactsViewModel extends ViewModel {
         }
     }
 
-    public void init() {
-    }
-
     public LiveData<PagedList<Contact>> getContactsListLivedata() {
         return contactsListLivedata;
     }

@@ -61,8 +61,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         searchLayout = binding.searchContactsFrame;
         searchBack = binding.contactsSearchBack;
         permissionDeniedLayout = binding.contactsPermissionDeniedLayout;
-        givePermission = binding.contactsGiveAccess;
-        loadingLayout = binding.contactsLoadingLayout;
+        givePermission = binding.contactsGiveAccess;        loadingLayout = binding.contactsLoadingLayout;
 
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
         searchContactsViewModel = new ViewModelProvider(this).get(SearchContactsViewModel.class);
@@ -70,11 +69,9 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         binding.setViewmodel(viewModel);
         binding.setClickListener(this);
 
-        viewModel.init();
         viewModel.getContactsListLivedata().observe(this, new Observer<List<Contact>>() {
             @Override
             public void onChanged(List<Contact> contacts) {
-                adapter.setContacts(contacts);
                 if (recyclerView.getAdapter() == null) {
                     recyclerView.setAdapter(adapter);
                 }

@@ -90,7 +90,6 @@ public class SearchContactsFragment extends Fragment {
         viewModel.getSearchContactsListLivedata().observe(requireActivity(), new Observer<List<Contact>>() {
             @Override
             public void onChanged(List<Contact> contacts) {
-                adapter.setContacts(contacts);
                 adapter.notifyDataSetChanged();
             }
         });
