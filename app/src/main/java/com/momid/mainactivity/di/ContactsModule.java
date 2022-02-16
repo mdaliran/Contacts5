@@ -3,11 +3,10 @@ package com.momid.mainactivity.di;
 import android.app.Application;
 import android.content.Context;
 
-import com.momid.mainactivity.ContactsGetter;
-import com.momid.mainactivity.data_model.Contact;
+import com.momid.mainactivity.ContactsReader;
+import com.momid.mainactivity.ContactsReaderImpl;
 
-import java.util.List;
-
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
@@ -16,11 +15,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 
 @Module
 @InstallIn(ViewModelComponent.class)
-public class ContactsModule {
+public abstract class ContactsModule {
 
-    @Provides
-    public ContactsGetter provideContactsGetter(@ApplicationContext Context context) {
-
-        return new ContactsGetter((Application) context);
-    }
+    @Binds
+    public abstract ContactsReader bindContactsReader(ContactsReaderImpl contactsReaderImpl);
 }

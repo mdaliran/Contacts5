@@ -35,23 +35,24 @@ public class ContactsViewModel extends ViewModel {
     public MutableLiveData<String> loadError = new MutableLiveData<>();
     public MutableLiveData<Boolean> searchMode = new MutableLiveData<>();
     public MutableLiveData<Boolean> contactsPermissionNeeded = new MutableLiveData<>();
+    public MutableLiveData<Boolean> permissionDeniedMode = new MutableLiveData<>();
     public MutableLiveData<Boolean> noContactExists = new MutableLiveData<>();
 
     public MutableLiveData<String> errorMessageLiveDate = new MutableLiveData<>();
 
     public ContactsRepository contactsRepository;
-    public ContactsGetter contactsGetter;
+    public ContactsReader contactsReader;
     public PermissionHelper permissionHelper;
 
     private static final int PERMISSION_REQUEST_CONTACT = 0;
 
     @Inject
-    public ContactsViewModel(ContactsRepository contactsRepository, ContactsGetter contactsGetter, PermissionHelper permissionHelper) {
+    public ContactsViewModel(ContactsRepository contactsRepository, ContactsReader contactsReader, PermissionHelper permissionHelper) {
 
         if (contactsListLivedata == null) {
 
             this.contactsRepository = contactsRepository;
-            this.contactsGetter = contactsGetter;
+            this.contactsReader = contactsReader;
             this.permissionHelper = permissionHelper;
 
             allContactsRequest = new MutableLiveData<>();
@@ -75,7 +76,7 @@ public class ContactsViewModel extends ViewModel {
                                     new Runnable() {
                                         @Override
                                         public void run() {
-                                            contactsRepository.insertContactsToDatabase(contactsGetter.startToGetContactsOnDevice());
+                                            contactsRepository.insertContactsToDatabase(contactsReader.startToGetContactsOnDevice());
                                         }
                                     }
                             ).start();
@@ -133,7 +134,7 @@ public class ContactsViewModel extends ViewModel {
             context.startActivity(callIntent);
         }
         else {
-            errorMessageLiveDate.postValue("phone number doesn't exist");
+            errorMessageLiveDate.postValue(context.getString(R.string.phone_number_doesnt_exist));
         }
     }
 
@@ -148,8 +149,18 @@ public class ContactsViewModel extends ViewModel {
             }
         }
         else {
-            errorMessageLiveDate.postValue("phone number doesn't exist");
+            errorMessageLiveDate.postValue(context.getString(R.string.phone_number_doesnt_exist));
         }
+    }
+
+    public void startPermissionDeniedMode() {
+
+        permissionDeniedMode.postValue(true);
+    }
+
+    public void endPermissionDeniedMode() {
+
+        permissionDeniedMode.postValue(false);
     }
 
     public void onPermissionGrant() {
@@ -160,7 +171,7 @@ public class ContactsViewModel extends ViewModel {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    contactsRepository.insertContactsToDatabase(contactsGetter.startToGetContactsOnDevice());
+                    contactsRepository.insertContactsToDatabase(contactsReader.startToGetContactsOnDevice());
                 }
             }).start();
         }

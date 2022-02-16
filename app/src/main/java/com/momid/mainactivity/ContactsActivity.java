@@ -61,7 +61,8 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         searchLayout = binding.searchContactsFrame;
         searchBack = binding.contactsSearchBack;
         permissionDeniedLayout = binding.contactsPermissionDeniedLayout;
-        givePermission = binding.contactsGiveAccess;        loadingLayout = binding.contactsLoadingLayout;
+        givePermission = binding.contactsGiveAccess;
+        loadingLayout = binding.contactsLoadingLayout;
 
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
         searchContactsViewModel = new ViewModelProvider(this).get(SearchContactsViewModel.class);
@@ -96,8 +97,9 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                 viewModel.onMessage(getApplicationContext(), contact.getPhoneNumber());
             }
         });
-        layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+
+//        layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+//        recyclerView.setLayoutManager(layoutManager);
         viewModel.getContactsListLivedata().observe(this, adapter::submitList);
         recyclerView.setAdapter(adapter);
 
@@ -129,7 +131,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                     askForPermission();
                 }
                 else {
-                    endPermissionMode();
+                    viewModel.endPermissionDeniedMode();
                     viewModel.onPermissionGrant();
                 }
             }
@@ -146,16 +148,6 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
     private void askForPermission() {
 
         viewModel.askForPermission(this);
-    }
-
-    public void startPermissionDeniedMode() {
-
-        permissionDeniedLayout.setVisibility(View.VISIBLE);
-    }
-
-    public void endPermissionMode() {
-
-        permissionDeniedLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -177,7 +169,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                 viewModel.contactsPermissionNeeded.setValue(false);
             }
             else {
-                startPermissionDeniedMode();
+                viewModel.startPermissionDeniedMode();
             }
         }
     }

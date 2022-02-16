@@ -1,5 +1,7 @@
 package com.momid.mainactivity;
 
+import static com.momid.mainactivity.Utility.BitMapToString;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.ContentResolver;
@@ -19,15 +21,19 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactsGetter {
+import javax.inject.Inject;
+
+public class ContactsReaderImpl implements ContactsReader {
 
     private final Application context;
 
-    public ContactsGetter(Application context) {
+    @Inject
+    public ContactsReaderImpl(Application context) {
         this.context = context;
     }
 
     @SuppressLint("Range")
+    @Override
     public List<Contact> startToGetContactsOnDevice() {
         List<Contact> list = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
@@ -93,24 +99,5 @@ public class ContactsGetter {
         }
 
         return list;
-    }
-
-    public static String BitMapToString(Bitmap bitmap){
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b=baos.toByteArray();
-        String temp= Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
-    }
-
-    public static Bitmap StringToBitMap(String encodedString){
-        try {
-            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
-            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch(Exception e) {
-            e.getMessage();
-            return null;
-        }
     }
 }
