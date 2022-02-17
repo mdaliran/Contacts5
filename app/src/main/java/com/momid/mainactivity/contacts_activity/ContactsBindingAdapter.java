@@ -1,4 +1,4 @@
-package com.momid.mainactivity.recycler_adapter;
+package com.momid.mainactivity.contacts_activity;
 
 import static com.momid.mainactivity.Utility.StringToBitMap;
 
@@ -10,7 +10,6 @@ import androidx.databinding.BindingAdapter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.momid.mainactivity.ColorHelper;
-import com.momid.mainactivity.ContactsReaderImpl;
 
 public class ContactsBindingAdapter {
 

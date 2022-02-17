@@ -1,4 +1,4 @@
-package com.momid.mainactivity.repository;
+package com.momid.mainactivity.contacts_activity;
 
 public interface DataCallback<T> {
 

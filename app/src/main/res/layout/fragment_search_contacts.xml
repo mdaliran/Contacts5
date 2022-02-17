@@ -6,13 +6,13 @@
         <import type="android.view.View"/>
         <variable
             name="viewmodel"
-            type="com.momid.mainactivity.SearchContactsViewModel" />
+            type="com.momid.mainactivity.search_fragment.SearchContactsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SearchContactsFragment">
+        tools:context=".search_fragment.SearchContactsFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_contacts_recycler"

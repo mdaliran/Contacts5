@@ -1,4 +1,4 @@
-package com.momid.mainactivity;
+package com.momid.mainactivity.contacts_activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,9 +16,8 @@ import androidx.lifecycle.ViewModel;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
-import com.momid.mainactivity.data_model.Contact;
-import com.momid.mainactivity.repository.ContactsRepository;
-import com.momid.mainactivity.request_model.AllContactsRequest;
+import com.momid.mainactivity.di.PermissionHelper;
+import com.momid.mainactivity.R;
 
 import javax.inject.Inject;
 

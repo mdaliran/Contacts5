@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.momid.mainactivity.data_model.Contact;
+import com.momid.mainactivity.contacts_activity.Contact;
 
 import java.util.List;
 

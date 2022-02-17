@@ -1,7 +1,7 @@
 package com.momid.mainactivity.di;
 
-import com.momid.mainactivity.repository.ContactsRepository;
-import com.momid.mainactivity.repository.ContactsRepositoryImpl;
+import com.momid.mainactivity.contacts_activity.ContactsRepository;
+import com.momid.mainactivity.contacts_activity.ContactsRepositoryImpl;
 
 import dagger.Binds;
 import dagger.Module;

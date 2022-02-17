@@ -7,7 +7,7 @@
         <import type="android.text.TextUtils"/>
         <variable
             name="contact"
-            type="com.momid.mainactivity.data_model.Contact" />
+            type="com.momid.mainactivity.contacts_activity.Contact" />
         <variable
             name="showNameSeparator"
             type="boolean" />

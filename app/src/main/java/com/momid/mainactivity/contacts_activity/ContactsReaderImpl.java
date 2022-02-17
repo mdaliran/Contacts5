@@ -1,9 +1,8 @@
-package com.momid.mainactivity;
+package com.momid.mainactivity.contacts_activity;
 
 import static com.momid.mainactivity.Utility.BitMapToString;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -12,11 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.util.Base64;
 
-import com.momid.mainactivity.data_model.Contact;
-
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +20,10 @@ import javax.inject.Inject;
 
 public class ContactsReaderImpl implements ContactsReader {
 
-    private final Application context;
+    private final Context context;
 
     @Inject
-    public ContactsReaderImpl(Application context) {
+    public ContactsReaderImpl(Context context) {
         this.context = context;
     }
 

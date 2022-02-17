@@ -1,13 +1,10 @@
-package com.momid.mainactivity;
+package com.momid.mainactivity.search_fragment;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.widget.Toast;
 
 import androidx.arch.core.util.Function;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -15,9 +12,8 @@ import androidx.lifecycle.ViewModel;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
-import com.momid.mainactivity.data_model.Contact;
-import com.momid.mainactivity.repository.ContactsRepository;
-import com.momid.mainactivity.request_model.SearchContactsRequest;
+import com.momid.mainactivity.contacts_activity.Contact;
+import com.momid.mainactivity.contacts_activity.ContactsRepository;
 
 import javax.inject.Inject;
 

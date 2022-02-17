@@ -1,4 +1,4 @@
-package com.momid.mainactivity;
+package com.momid.mainactivity.search_fragment;
 
 import android.os.Bundle;
 
@@ -17,10 +17,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.momid.mainactivity.data_model.Contact;
+import com.momid.mainactivity.R;
+import com.momid.mainactivity.contacts_activity.Contact;
 import com.momid.mainactivity.databinding.FragmentSearchContactsBinding;
-import com.momid.mainactivity.recycler_adapter.ContactsAdapter;
-import com.momid.mainactivity.recycler_adapter.OnItemClick;
+import com.momid.mainactivity.contacts_activity.ContactsAdapter;
+import com.momid.mainactivity.contacts_activity.OnItemClick;
 
 import java.util.List;
 

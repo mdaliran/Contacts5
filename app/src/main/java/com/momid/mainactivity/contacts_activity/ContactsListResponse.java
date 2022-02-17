@@ -1,6 +1,6 @@
-package com.momid.mainactivity.response_model;
+package com.momid.mainactivity.contacts_activity;
 
-import com.momid.mainactivity.data_model.Contact;
+import com.momid.mainactivity.contacts_activity.Contact;
 
 import java.util.ArrayList;
 import java.util.List;

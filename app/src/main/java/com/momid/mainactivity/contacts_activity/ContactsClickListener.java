@@ -1,4 +1,4 @@
-package com.momid.mainactivity;
+package com.momid.mainactivity.contacts_activity;
 
 public interface ContactsClickListener {
 
