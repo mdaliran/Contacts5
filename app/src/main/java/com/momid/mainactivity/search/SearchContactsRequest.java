@@ -1,4 +1,4 @@
-package com.momid.mainactivity.search_fragment;
+package com.momid.mainactivity.search;
 
 public class SearchContactsRequest {
 

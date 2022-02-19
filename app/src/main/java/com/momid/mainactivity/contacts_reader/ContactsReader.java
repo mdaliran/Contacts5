@@ -1,4 +1,6 @@
-package com.momid.mainactivity.contacts_activity;
+package com.momid.mainactivity.contacts_reader;
+
+import com.momid.mainactivity.contacts.Contact;
 
 import java.util.List;
 

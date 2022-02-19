@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/AndroidDeveloper/StudioProjects/Contacts5/app/src/main/res/layout/activity_contacts.xml" value="0.5" />
+        <entry key="..\:/Users/AndroidDeveloper/StudioProjects/Contacts5/app/src/main/res/layout/fragment_search_contacts.xml" value="0.5" />
+        <entry key="..\:/Users/AndroidDeveloper/StudioProjects/Contacts5/app/src/main/res/layout/item_contact.xml" value="0.378125" />
         <entry key="..\:/Users/moham/AndroidStudioProjects/Conta/app/src/main/res/layout/activity_contacts.xml" value="0.4" />
         <entry key="..\:/Users/moham/AndroidStudioProjects/Conta/app/src/main/res/layout/fragment_search_contacts.xml" value="0.4" />
         <entry key="..\:/Users/moham/AndroidStudioProjects/Conta/app/src/main/res/layout/item_contact.xml" value="0.1" />

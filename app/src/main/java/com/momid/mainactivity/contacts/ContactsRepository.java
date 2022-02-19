@@ -1,10 +1,9 @@
-package com.momid.mainactivity.contacts_activity;
+package com.momid.mainactivity.contacts;
 
 import androidx.lifecycle.LiveData;
-import androidx.paging.DataSource;
 import androidx.paging.PagingSource;
 
-import com.momid.mainactivity.search_fragment.SearchContactsRequest;
+import com.momid.mainactivity.search.SearchContactsRequest;
 
 import java.util.List;
 

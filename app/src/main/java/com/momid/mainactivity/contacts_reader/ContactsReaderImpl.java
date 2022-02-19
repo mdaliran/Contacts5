@@ -1,4 +1,4 @@
-package com.momid.mainactivity.contacts_activity;
+package com.momid.mainactivity.contacts_reader;
 
 import static com.momid.mainactivity.Utility.BitMapToString;
 
@@ -11,6 +11,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
+
+import com.momid.mainactivity.contacts.Contact;
 
 import java.io.InputStream;
 import java.util.ArrayList;

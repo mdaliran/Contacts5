@@ -1,4 +1,4 @@
-package com.momid.mainactivity.search_fragment;
+package com.momid.mainactivity.search;
 
 import android.os.Bundle;
 
@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.PagingData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,10 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.momid.mainactivity.R;
-import com.momid.mainactivity.contacts_activity.Contact;
+import com.momid.mainactivity.contacts.Contact;
 import com.momid.mainactivity.databinding.FragmentSearchContactsBinding;
-import com.momid.mainactivity.contacts_activity.ContactsAdapter;
-import com.momid.mainactivity.contacts_activity.OnItemClick;
+import com.momid.mainactivity.contacts.ContactsAdapter;
+import com.momid.mainactivity.contacts.OnItemClick;
 
 import java.util.List;
 
@@ -88,10 +89,11 @@ public class SearchContactsFragment extends Fragment {
 
         nothingFound.setVisibility(View.GONE);
 
-        viewModel.getSearchContactsListLivedata().observe(requireActivity(), new Observer<List<Contact>>() {
+        viewModel.getSearchContactsListLivedata().observe(requireActivity(), new Observer<PagingData<Contact>>() {
             @Override
-            public void onChanged(List<Contact> contacts) {
-                adapter.notifyDataSetChanged();
+            public void onChanged(PagingData<Contact> pagingData) {
+//                adapter.notifyDataSetChanged();
+                adapter.submitData(getLifecycle(), pagingData);
             }
         });
 

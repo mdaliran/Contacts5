@@ -1,4 +1,4 @@
-package com.momid.mainactivity.contacts_activity;
+package com.momid.mainactivity.contacts;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,11 +22,9 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.momid.mainactivity.R;
-import com.momid.mainactivity.search_fragment.SearchContactsFragment;
-import com.momid.mainactivity.search_fragment.SearchContactsViewModel;
+import com.momid.mainactivity.search.SearchContactsFragment;
+import com.momid.mainactivity.search.SearchContactsViewModel;
 import com.momid.mainactivity.databinding.ActivityContactsBinding;
-
-import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

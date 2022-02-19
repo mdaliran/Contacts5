@@ -1,14 +1,13 @@
 package com.momid.mainactivity.database;
 
 import androidx.lifecycle.LiveData;
-import androidx.paging.DataSource;
 import androidx.paging.PagingSource;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.momid.mainactivity.contacts_activity.Contact;
+import com.momid.mainactivity.contacts.Contact;
 
 import java.util.List;
 

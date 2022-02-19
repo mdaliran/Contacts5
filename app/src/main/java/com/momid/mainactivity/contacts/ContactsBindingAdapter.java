@@ -1,4 +1,4 @@
-package com.momid.mainactivity.contacts_activity;
+package com.momid.mainactivity.contacts;
 
 import static com.momid.mainactivity.Utility.StringToBitMap;
 

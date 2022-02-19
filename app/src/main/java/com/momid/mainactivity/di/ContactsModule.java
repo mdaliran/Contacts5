@@ -1,7 +1,7 @@
 package com.momid.mainactivity.di;
 
-import com.momid.mainactivity.contacts_activity.ContactsReader;
-import com.momid.mainactivity.contacts_activity.ContactsReaderImpl;
+import com.momid.mainactivity.contacts_reader.ContactsReader;
+import com.momid.mainactivity.contacts_reader.ContactsReaderImpl;
 
 import dagger.Binds;
 import dagger.Module;

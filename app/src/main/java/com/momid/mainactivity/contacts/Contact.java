@@ -1,4 +1,4 @@
-package com.momid.mainactivity.contacts_activity;
+package com.momid.mainactivity.contacts;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

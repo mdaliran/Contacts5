@@ -6,13 +6,13 @@
         <import type="android.view.View"/>
         <variable
             name="viewmodel"
-            type="com.momid.mainactivity.search_fragment.SearchContactsViewModel" />
+            type="com.momid.mainactivity.search.SearchContactsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".search_fragment.SearchContactsFragment">
+        tools:context=".search.SearchContactsFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_contacts_recycler"
@@ -31,7 +31,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:text="@string/nothing_found_on_search"
-            android:visibility="@{viewmodel.searchContactsListLivedata.empty ? View.VISIBLE : View.GONE}"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

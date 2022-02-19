@@ -1,4 +1,4 @@
-package com.momid.mainactivity.contacts_activity;
+package com.momid.mainactivity.contacts;
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,14 +14,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelKt;
-import androidx.paging.LivePagedListBuilder;
-import androidx.paging.PagedList;
 import androidx.paging.Pager;
 import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
 import androidx.paging.PagingSource;
 
+import com.momid.mainactivity.contacts_reader.ContactsReader;
 import com.momid.mainactivity.di.PermissionHelper;
 import com.momid.mainactivity.R;
 

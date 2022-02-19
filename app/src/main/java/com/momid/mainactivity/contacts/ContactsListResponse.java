@@ -1,6 +1,4 @@
-package com.momid.mainactivity.contacts_activity;
-
-import com.momid.mainactivity.contacts_activity.Contact;
+package com.momid.mainactivity.contacts;
 
 import java.util.ArrayList;
 import java.util.List;
