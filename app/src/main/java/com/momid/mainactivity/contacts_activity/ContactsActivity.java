@@ -6,11 +6,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.LoadState;
+import androidx.paging.PagingData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -70,14 +73,18 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         binding.setViewmodel(viewModel);
         binding.setClickListener(this);
 
-        viewModel.getContactsListLivedata().observe(this, new Observer<List<Contact>>() {
+        viewModel.getContactsListLivedata().observe(this, new Observer<PagingData<Contact>>() {
             @Override
-            public void onChanged(List<Contact> contacts) {
+            public void onChanged(PagingData<Contact> pagingData) {
                 if (recyclerView.getAdapter() == null) {
                     recyclerView.setAdapter(adapter);
+//                    adapter.submitData(getLifecycle(), pagingData);
                 }
-                viewModel.loading.postValue(false);
-                adapter.notifyDataSetChanged();
+                Log.d("getContactsList", "getContactsList");
+                viewModel.loading.setValue(false);
+                adapter.submitData(getLifecycle(), pagingData);
+                viewModel.loading.setValue(false);
+//                adapter.notifyDataSetChanged();
             }
         });
 
@@ -98,9 +105,14 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
             }
         });
 
+        adapter.addLoadStateListener(combinedLoadStates -> {
+                viewModel.loading.postValue(combinedLoadStates.getRefresh() instanceof LoadState.Loading);
+                return null;
+        });
+
 //        layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
 //        recyclerView.setLayoutManager(layoutManager);
-        viewModel.getContactsListLivedata().observe(this, adapter::submitList);
+//        viewModel.getContactsListLivedata().observe(this, adapter::submitList);
         recyclerView.setAdapter(adapter);
 
         SearchContactsFragment searchContactsFragment = SearchContactsFragment.getInstance();

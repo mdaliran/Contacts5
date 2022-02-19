@@ -7,13 +7,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.paging.PagedListAdapter;
+import androidx.paging.PagingDataAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.momid.mainactivity.R;
 import com.momid.mainactivity.databinding.ItemContactBinding;
 
-public class ContactsAdapter extends PagedListAdapter<Contact, RecyclerView.ViewHolder> {
+public class ContactsAdapter extends PagingDataAdapter<Contact, RecyclerView.ViewHolder> {
 
 
     private OnItemClick onItemClick;

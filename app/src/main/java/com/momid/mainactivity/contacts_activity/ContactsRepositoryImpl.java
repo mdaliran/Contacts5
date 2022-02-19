@@ -2,6 +2,7 @@ package com.momid.mainactivity.contacts_activity;
 
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
+import androidx.paging.PagingSource;
 
 import com.momid.mainactivity.database.ContactsDao;
 import com.momid.mainactivity.search_fragment.SearchContactsRequest;
@@ -21,13 +22,13 @@ public class ContactsRepositoryImpl implements ContactsRepository {
     }
 
     @Override
-    public DataSource.Factory<Integer, Contact> getAllContacts(AllContactsRequest request) {
+    public PagingSource<Integer, Contact> getAllContacts(AllContactsRequest request) {
 
         return contactsDao.getAllContacts();
     }
 
     @Override
-    public DataSource.Factory<Integer, Contact> searchContacts(SearchContactsRequest request) {
+    public PagingSource<Integer, Contact> searchContacts(SearchContactsRequest request) {
 
         return contactsDao.searchContacts(request.getSearchQuery());
     }

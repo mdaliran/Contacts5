@@ -18,12 +18,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
 public class ContactsReaderImpl implements ContactsReader {
 
     private final Context context;
 
     @Inject
-    public ContactsReaderImpl(Context context) {
+    public ContactsReaderImpl(@ApplicationContext Context context) {
         this.context = context;
     }
 

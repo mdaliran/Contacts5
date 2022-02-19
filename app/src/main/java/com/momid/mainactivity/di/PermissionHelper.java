@@ -12,8 +12,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 
 public class PermissionHelper {
 
-    @Inject
-    private final Context context;
+//    @Inject
+    public Context context;
 
     public PermissionHelper(Context context) {
 

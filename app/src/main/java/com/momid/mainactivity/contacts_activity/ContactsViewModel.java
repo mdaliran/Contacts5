@@ -13,8 +13,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelKt;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
+import androidx.paging.Pager;
+import androidx.paging.PagingConfig;
+import androidx.paging.PagingData;
+import androidx.paging.PagingLiveData;
+import androidx.paging.PagingSource;
 
 import com.momid.mainactivity.di.PermissionHelper;
 import com.momid.mainactivity.R;
@@ -22,12 +28,14 @@ import com.momid.mainactivity.R;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import kotlin.jvm.functions.Function0;
+import kotlinx.coroutines.CoroutineScope;
 
 @HiltViewModel
 public class ContactsViewModel extends ViewModel {
 
     private MutableLiveData<AllContactsRequest> allContactsRequest = new MutableLiveData<>();
-    private LiveData<PagedList<Contact>> contactsListLivedata;
+    private LiveData<PagingData<Contact>> contactsListLivedata;
     private LiveData<Integer> contactsCount;
 
     public MutableLiveData<Boolean> loading = new MutableLiveData<>();
@@ -56,15 +64,32 @@ public class ContactsViewModel extends ViewModel {
 
             allContactsRequest = new MutableLiveData<>();
 
-            contactsListLivedata = new LivePagedListBuilder<>(contactsRepository.getAllContacts(allContactsRequest.getValue()), 25).build();
+//            contactsListLivedata = new LivePagedListBuilder<>(contactsRepository.getAllContacts(allContactsRequest.getValue()), 25).build();
+
+//            contactsListLivedata = new MutableLiveData<>();
 
             contactsCount = contactsRepository.getContactsCount();
+
+            loading.postValue(true);
+
+            CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
+            Pager<Integer, Contact> pager = new Pager<Integer, Contact>(
+                    new PagingConfig(/* pageSize = */ 25), new Function0() {
+                @Override
+                public PagingSource<Integer, Contact> invoke() {
+                    return contactsRepository.getAllContacts(allContactsRequest.getValue());
+                }
+            });
+
+            contactsListLivedata = PagingLiveData.getLiveData(pager);
+            PagingLiveData.cachedIn(contactsListLivedata, viewModelScope);
+
 
             contactsCount.observeForever(new Observer<Integer>() {
                 @Override
                 public void onChanged(Integer integer) {
                     if (integer > 0) {
-                        getAllContacts();
+//                        getAllContacts();
                         Log.d("", "contacts count are changed");
                     }
                     else {
@@ -89,7 +114,7 @@ public class ContactsViewModel extends ViewModel {
         }
     }
 
-    public LiveData<PagedList<Contact>> getContactsListLivedata() {
+    public LiveData<PagingData<Contact>> getContactsListLivedata() {
         return contactsListLivedata;
     }
 
@@ -97,7 +122,19 @@ public class ContactsViewModel extends ViewModel {
 
         loading.postValue(true);
 
-        contactsRepository.getAllContacts(allContactsRequest.getValue());
+//        contactsRepository.getAllContacts(allContactsRequest.getValue());
+
+        CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
+        Pager<Integer, Contact> pager = new Pager<Integer, Contact>(
+                new PagingConfig(/* pageSize = */ 25), new Function0() {
+            @Override
+            public PagingSource<Integer, Contact> invoke() {
+                return contactsRepository.getAllContacts(allContactsRequest.getValue());
+            }
+        });
+
+        contactsListLivedata = PagingLiveData.getLiveData(pager);
+        PagingLiveData.cachedIn(contactsListLivedata, viewModelScope);
     }
 
     public void askForPermission(Activity activity) {

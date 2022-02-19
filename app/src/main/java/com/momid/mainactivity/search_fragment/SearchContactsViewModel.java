@@ -43,7 +43,8 @@ public class SearchContactsViewModel extends ViewModel {
             searchContactsListLivedata = Transformations.switchMap(searchContactsRequest, new Function<SearchContactsRequest, LiveData<PagedList<Contact>>>() {
                 @Override
                 public LiveData<PagedList<Contact>> apply(SearchContactsRequest input) {
-                    return new LivePagedListBuilder<>(contactsRepository.searchContacts(searchContactsRequest.getValue()), 25).build();
+//                    return new LivePagedListBuilder<>(contactsRepository.searchContacts(searchContactsRequest.getValue()), 25).build();
+                    return null;
                 }
             });
         }

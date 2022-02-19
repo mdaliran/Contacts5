@@ -83,7 +83,7 @@ public class SearchContactsFragment extends Fragment {
 
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        viewModel.getSearchContactsListLivedata().observe(requireActivity(), adapter::submitList);
+//        viewModel.getSearchContactsListLivedata().observe(requireActivity(), adapter::submitList);
         recyclerView.setAdapter(adapter);
 
         nothingFound.setVisibility(View.GONE);
