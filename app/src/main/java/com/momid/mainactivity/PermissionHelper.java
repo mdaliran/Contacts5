@@ -1,4 +1,4 @@
-package com.momid.mainactivity.di;
+package com.momid.mainactivity;
 
 import android.Manifest;
 import android.content.Context;

@@ -6,6 +6,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.paging.LoadState;
 import androidx.paging.PagingData;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.momid.mainactivity.EmptyFragmentDirections;
 import com.momid.mainactivity.R;
 import com.momid.mainactivity.search.SearchContactsFragment;
 import com.momid.mainactivity.search.SearchContactsViewModel;
@@ -113,8 +116,8 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
 //        viewModel.getContactsListLivedata().observe(this, adapter::submitList);
         recyclerView.setAdapter(adapter);
 
-        SearchContactsFragment searchContactsFragment = SearchContactsFragment.getInstance();
-        getSupportFragmentManager().beginTransaction().add(R.id.search_contacts_frame, searchContactsFragment).commit();
+//        SearchContactsFragment searchContactsFragment = SearchContactsFragment.getInstance();
+//        getSupportFragmentManager().beginTransaction().add(R.id.search_contacts_frame, searchContactsFragment).commit();
         searchLayout.setVisibility(View.INVISIBLE);
         searchBack.setVisibility(View.GONE);
 
@@ -131,6 +134,25 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                 viewModel.onSearchViewTextChange(s);
                 searchContactsViewModel.onSearchViewTextChange(s);
                 return true;
+            }
+        });
+
+        viewModel.searchMode.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_container);
+                NavController navController = navHostFragment.getNavController();
+                if (aBoolean) {
+                    if (navController.getCurrentDestination().getId() == R.id.emptyFragment) {
+                        navController.navigate(EmptyFragmentDirections.actionEmptyFragmentToSearchContactsFragment());
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "not in emptyFragment", Toast.LENGTH_LONG).show();
+                    }
+                }
+                else {
+                    navController.popBackStack();
+                }
             }
         });
 

@@ -6,5 +6,8 @@ import java.util.List;
 
 public interface ContactsReader {
 
+
+    public void startToRead(ContactsReaderListener contactsReaderListener);
+
     public List<Contact> startToGetContactsOnDevice();
 }

@@ -49,4 +49,9 @@ public class ContactsRepositoryImpl implements ContactsRepository {
 
         return contactsDao.searchContactsCount(searchQuery);
     }
+
+    public int getContactsCount1() {
+
+        return contactsDao.getContactsCount();
+    }
 }

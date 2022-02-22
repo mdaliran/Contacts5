@@ -10,9 +10,13 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.ContactsContract;
 
 import com.momid.mainactivity.contacts.Contact;
+import com.momid.mainactivity.contacts.ContactsRepository;
+import com.momid.mainactivity.PermissionHelper;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -25,10 +29,40 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 public class ContactsReaderImpl implements ContactsReader {
 
     private final Context context;
+    ContactsRepository repository;
+    PermissionHelper permissionHelper;
 
     @Inject
-    public ContactsReaderImpl(@ApplicationContext Context context) {
+    public ContactsReaderImpl(@ApplicationContext Context context, ContactsRepository repository, PermissionHelper permissionHelper) {
         this.context = context;
+        this.repository = repository;
+        this.permissionHelper = permissionHelper;
+    }
+
+    @Override
+    public void startToRead(ContactsReaderListener contactsReaderListener) {
+
+        new Thread(() -> {
+
+            int contactsCount = repository.getContactsCount1();
+
+            if (contactsCount > 0) {
+                runOnUiThread(contactsReaderListener::alreadyStored);
+            }
+            else {
+                if (permissionHelper.hasContactsPermission()) {
+
+                    runOnUiThread(contactsReaderListener::readStart);
+
+                    repository.insertContactsToDatabase(startToGetContactsOnDevice());
+
+                    runOnUiThread(contactsReaderListener::readEnd);
+                }
+                else {
+                    runOnUiThread(contactsReaderListener::permissionNeeded);
+                }
+            }
+        }).start();
     }
 
     @SuppressLint("Range")
@@ -98,5 +132,10 @@ public class ContactsReaderImpl implements ContactsReader {
         }
 
         return list;
+    }
+
+    private void runOnUiThread(Runnable runnable) {
+
+        new Handler(Looper.getMainLooper()).post(runnable);
     }
 }

@@ -19,4 +19,6 @@ public interface ContactsRepository {
     LiveData<Integer> getContactsCount();
 
     LiveData<Integer> getSearchContactsCount(String searchQuery);
+
+    int getContactsCount1();
 }

@@ -37,4 +37,7 @@ public interface ContactsDao {
 
     @Update
     public void updateAll(List<Contact> contacts);
+
+    @Query("SELECT COUNT(*) FROM Contacts")
+    public int getContactsCount();
 }

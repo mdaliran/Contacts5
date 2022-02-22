@@ -1,8 +1,8 @@
-package com.momid.mainactivity;
+package com.momid.mainactivity.di;
 
 import android.content.Context;
 
-import com.momid.mainactivity.di.PermissionHelper;
+import com.momid.mainactivity.PermissionHelper;
 
 import dagger.Module;
 import dagger.Provides;

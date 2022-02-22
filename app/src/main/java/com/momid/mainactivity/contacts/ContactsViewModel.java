@@ -20,9 +20,11 @@ import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
 import androidx.paging.PagingSource;
 
+import com.momid.mainactivity.CallUtil;
 import com.momid.mainactivity.contacts_reader.ContactsReader;
-import com.momid.mainactivity.di.PermissionHelper;
+import com.momid.mainactivity.PermissionHelper;
 import com.momid.mainactivity.R;
+import com.momid.mainactivity.contacts_reader.ContactsReaderListener;
 
 import javax.inject.Inject;
 
@@ -31,11 +33,10 @@ import kotlin.jvm.functions.Function0;
 import kotlinx.coroutines.CoroutineScope;
 
 @HiltViewModel
-public class ContactsViewModel extends ViewModel {
+public class ContactsViewModel extends ViewModel implements ContactsReaderListener {
 
     private MutableLiveData<AllContactsRequest> allContactsRequest = new MutableLiveData<>();
     private LiveData<PagingData<Contact>> contactsListLivedata;
-    private LiveData<Integer> contactsCount;
 
     public MutableLiveData<Boolean> loading = new MutableLiveData<>();
     public MutableLiveData<String> loadError = new MutableLiveData<>();
@@ -48,69 +49,20 @@ public class ContactsViewModel extends ViewModel {
 
     public ContactsRepository contactsRepository;
     public ContactsReader contactsReader;
-    public PermissionHelper permissionHelper;
+    @Inject
+    public CallUtil callUtil;
 
     private static final int PERMISSION_REQUEST_CONTACT = 0;
 
     @Inject
-    public ContactsViewModel(ContactsRepository contactsRepository, ContactsReader contactsReader, PermissionHelper permissionHelper) {
-
-        if (contactsListLivedata == null) {
+    public ContactsViewModel(ContactsRepository contactsRepository, ContactsReader contactsReader) {
 
             this.contactsRepository = contactsRepository;
             this.contactsReader = contactsReader;
-            this.permissionHelper = permissionHelper;
 
-            allContactsRequest = new MutableLiveData<>();
+            getAllContacts();
 
-//            contactsListLivedata = new LivePagedListBuilder<>(contactsRepository.getAllContacts(allContactsRequest.getValue()), 25).build();
-
-//            contactsListLivedata = new MutableLiveData<>();
-
-            contactsCount = contactsRepository.getContactsCount();
-
-            loading.postValue(true);
-
-            CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
-            Pager<Integer, Contact> pager = new Pager<Integer, Contact>(
-                    new PagingConfig(/* pageSize = */ 25), new Function0() {
-                @Override
-                public PagingSource<Integer, Contact> invoke() {
-                    return contactsRepository.getAllContacts(allContactsRequest.getValue());
-                }
-            });
-
-            contactsListLivedata = PagingLiveData.getLiveData(pager);
-            PagingLiveData.cachedIn(contactsListLivedata, viewModelScope);
-
-
-            contactsCount.observeForever(new Observer<Integer>() {
-                @Override
-                public void onChanged(Integer integer) {
-                    if (integer > 0) {
-//                        getAllContacts();
-                        Log.d("", "contacts count are changed");
-                    }
-                    else {
-                        if (permissionHelper.hasContactsPermission()) {
-                            loading.postValue(true);
-
-                            new Thread(
-                                    new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            contactsRepository.insertContactsToDatabase(contactsReader.startToGetContactsOnDevice());
-                                        }
-                                    }
-                            ).start();
-                        }
-                        else {
-                            contactsPermissionNeeded.postValue(true);
-                        }
-                    }
-                }
-            });
-        }
+            contactsReader.startToRead(this);
     }
 
     public LiveData<PagingData<Contact>> getContactsListLivedata() {
@@ -121,8 +73,6 @@ public class ContactsViewModel extends ViewModel {
 
         loading.postValue(true);
 
-//        contactsRepository.getAllContacts(allContactsRequest.getValue());
-
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         Pager<Integer, Contact> pager = new Pager<Integer, Contact>(
                 new PagingConfig(/* pageSize = */ 25), new Function0() {
@@ -132,8 +82,7 @@ public class ContactsViewModel extends ViewModel {
             }
         });
 
-        contactsListLivedata = PagingLiveData.getLiveData(pager);
-        PagingLiveData.cachedIn(contactsListLivedata, viewModelScope);
+        contactsListLivedata = PagingLiveData.cachedIn(PagingLiveData.getLiveData(pager), viewModelScope);
     }
 
     public void askForPermission(Activity activity) {
@@ -150,23 +99,10 @@ public class ContactsViewModel extends ViewModel {
         }
     }
 
-    public void onGivePermissionClick() {
-
-        contactsPermissionNeeded.postValue(true);
-    }
-
-    public void onSearchBackClick() {
-
-        searchMode.postValue(false);
-    }
-
     public void onCall(Context context, String contactPhoneNumber) {
 
         if (contactPhoneNumber != null && !contactPhoneNumber.equals("0")) {
-            Intent callIntent = new Intent(Intent.ACTION_DIAL);
-            callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            callIntent.setData(Uri.parse("tel:" + contactPhoneNumber));
-            context.startActivity(callIntent);
+            callUtil.call(contactPhoneNumber);
         }
         else {
             errorMessageLiveDate.postValue(context.getString(R.string.phone_number_doesnt_exist));
@@ -176,12 +112,7 @@ public class ContactsViewModel extends ViewModel {
     public void onMessage(Context context, String contactPhoneNumber) {
 
         if (contactPhoneNumber != null && !contactPhoneNumber.equals("0")) {
-            Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("smsto:" + contactPhoneNumber)); // This ensures only SMS apps respond
-            intent.putExtra("sms_body", "hello, it's me.");
-            if (intent.resolveActivity(context.getPackageManager()) != null) {
-                context.startActivity(intent);
-            }
+            callUtil.message("hi", contactPhoneNumber);
         }
         else {
             errorMessageLiveDate.postValue(context.getString(R.string.phone_number_doesnt_exist));
@@ -200,16 +131,27 @@ public class ContactsViewModel extends ViewModel {
 
     public void onPermissionGrant() {
 
-        if (permissionHelper.hasContactsPermission()) {
-            loading.postValue(true);
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    contactsRepository.insertContactsToDatabase(contactsReader.startToGetContactsOnDevice());
-                }
-            }).start();
-        }
+            contactsReader.startToRead(this);
     }
 
+    @Override
+    public void alreadyStored() {
+
+    }
+
+    @Override
+    public void readStart() {
+        loading.postValue(true);
+    }
+
+    @Override
+    public void readEnd() {
+        loading.postValue(false);
+    }
+
+    @Override
+    public void permissionNeeded() {
+
+        contactsPermissionNeeded.postValue(true);
+    }
 }

@@ -5,4 +5,6 @@
     <string name="please_give_permission">برای مشاهده لیست، باید اجازه دسترسی به مخاطبان را بدهید</string>
     <string name="give_permission">اجازه دسترسی</string>
     <string name="phone_number_doesnt_exist">phone number doesn\'t exist</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

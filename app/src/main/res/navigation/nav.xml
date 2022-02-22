@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav"
+    app:startDestination="@id/emptyFragment">
+
+    <fragment
+        android:id="@+id/searchContactsFragment"
+        android:name="com.momid.mainactivity.search.SearchContactsFragment"
+        android:label="SearchContactsFragment"/>
+    <fragment
+        android:id="@+id/emptyFragment"
+        android:name="com.momid.mainactivity.EmptyFragment">
+        <action
+            android:id="@+id/action_emptyFragment_to_searchContactsFragment"
+            app:destination="@id/searchContactsFragment"
+            app:popUpTo="@id/emptyFragment"/>
+    </fragment>
+</navigation>

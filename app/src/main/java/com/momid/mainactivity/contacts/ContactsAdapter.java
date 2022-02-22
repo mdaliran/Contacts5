@@ -75,16 +75,13 @@ public class ContactsAdapter extends PagingDataAdapter<Contact, RecyclerView.Vie
 
         public void bindItem(Contact contact, String previousContactFirstLetter, String nextContactFirstLetter, int itemCount) {
 
-            int position = getAdapterPosition();
+            int position = getAbsoluteAdapterPosition();
 
             binding.setContact(contact);
 
-            boolean showNameSeparator = position == 0 || (position > 0 && !(String.valueOf(contact.getFirstLetter())).equals(previousContactFirstLetter));
+            boolean showNameSeparator = position == 0 || (position > 0 && !(contact.getFirstLetter()).equals(previousContactFirstLetter));
 
-            boolean hideBottomSeparator = position < itemCount - 1 && !(String.valueOf(contact.getFirstLetter()).equals(nextContactFirstLetter));
-            if (position < itemCount - 1 && !(String.valueOf(contact.getFirstLetter()).equals(nextContactFirstLetter))) {
-                hideBottomSeparator = true;
-            }
+            boolean hideBottomSeparator = position < itemCount - 1 && !(contact.getFirstLetter().equals(nextContactFirstLetter));
 
             binding.setShowNameSeparator(showNameSeparator);
             binding.setHideBottomSeparator(hideBottomSeparator);
