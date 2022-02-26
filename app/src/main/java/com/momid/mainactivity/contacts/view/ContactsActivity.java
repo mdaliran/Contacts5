@@ -77,12 +77,9 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         searchLayout.setVisibility(View.INVISIBLE);
         searchBack.setVisibility(View.GONE);
 
-        viewModel.readComplete.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    contactsFragmentViewModel.refresh();
-                }
+        viewModel.readComplete.observe(this, aBoolean -> {
+            if (aBoolean) {
+                contactsFragmentViewModel.refresh();
             }
         });
 
@@ -110,11 +107,13 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                     navController.navigate(ContactsFragmentDirections.actionContactsFragmentToSearchContactsFragment());
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "not in emptyFragment", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), "not in emptyFragment", Toast.LENGTH_LONG).show();
                 }
             }
             else {
                 navController.popBackStack();
+//                searchContactsViewModel.refresh();
+//                Toast.makeText(getApplicationContext(), "back", Toast.LENGTH_LONG).show();
             }
         });
 

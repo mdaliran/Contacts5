@@ -14,7 +14,6 @@
         android:name="com.momid.mainactivity.ContactsFragment">
         <action
             android:id="@+id/action_contactsFragment_to_searchContactsFragment"
-            app:destination="@id/searchContactsFragment"
-            app:popUpTo="@id/contactsFragment" />
+            app:destination="@id/searchContactsFragment"/>
     </fragment>
 </navigation>

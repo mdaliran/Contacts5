@@ -20,8 +20,6 @@ import com.momid.mainactivity.util.CallUtil;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import dagger.hilt.android.scopes.ViewModelScoped;
-import kotlin.jvm.functions.Function0;
 import kotlinx.coroutines.CoroutineScope;
 
 @HiltViewModel

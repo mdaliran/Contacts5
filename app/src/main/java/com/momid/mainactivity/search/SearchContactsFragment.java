@@ -35,6 +35,7 @@ public class SearchContactsFragment extends Fragment {
 
 
     public SearchContactsFragment() {
+
     }
 
 

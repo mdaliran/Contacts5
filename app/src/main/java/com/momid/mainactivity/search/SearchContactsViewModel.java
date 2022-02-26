@@ -2,7 +2,6 @@ package com.momid.mainactivity.search;
 
 import android.content.Context;
 
-import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -14,15 +13,14 @@ import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
 import androidx.paging.PagingSource;
 
-import com.momid.mainactivity.util.CallUtil;
 import com.momid.mainactivity.R;
 import com.momid.mainactivity.contacts.Contact;
 import com.momid.mainactivity.contacts.ContactsRepository;
+import com.momid.mainactivity.util.CallUtil;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import kotlin.jvm.functions.Function0;
 import kotlinx.coroutines.CoroutineScope;
 
 @HiltViewModel
@@ -30,6 +28,8 @@ public class SearchContactsViewModel extends ViewModel {
 
     private MutableLiveData<SearchContactsRequest> searchContactsRequest = new MutableLiveData<>();
     private LiveData<PagingData<Contact>> searchContactsListLivedata;
+
+    private PagingSource pagingSource;
 
     public MutableLiveData<Boolean> searchMode = new MutableLiveData<>();
 
@@ -44,13 +44,7 @@ public class SearchContactsViewModel extends ViewModel {
 
             this.contactsRepository = contactsRepository;
 
-            searchContactsListLivedata = Transformations.switchMap(searchContactsRequest, new Function<SearchContactsRequest, LiveData<PagingData<Contact>>>() {
-                @Override
-                public LiveData<PagingData<Contact>> apply(SearchContactsRequest input) {
-
-                    return getSearchPagingData();
-                }
-            });
+            searchContactsListLivedata = Transformations.switchMap(searchContactsRequest, input -> getSearchPagingData());
     }
 
     public LiveData<PagingData<Contact>> getSearchContactsListLivedata() {
@@ -61,20 +55,22 @@ public class SearchContactsViewModel extends ViewModel {
 
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(SearchContactsViewModel.this);
         Pager<Integer, Contact> pager = new Pager<Integer, Contact>(
-                new PagingConfig(/* pageSize = */ 25), new Function0() {
-            @Override
-            public PagingSource<Integer, Contact> invoke() {
-                return contactsRepository.searchContacts(searchContactsRequest.getValue());
-            }
-        });
+                new PagingConfig(/* pageSize = */ 25), () -> {
+                    pagingSource = contactsRepository.searchContacts(searchContactsRequest.getValue());
+                    return pagingSource;
+                });
 
-        searchContactsListLivedata = PagingLiveData.cachedIn(PagingLiveData.getLiveData(pager), viewModelScope);
-        return searchContactsListLivedata;
+        return PagingLiveData.cachedIn(PagingLiveData.getLiveData(pager), viewModelScope);
     }
 
     public void searchContacts(SearchContactsRequest request) {
 
         this.searchContactsRequest.setValue(request);
+    }
+
+    public void refresh() {
+
+        pagingSource.invalidate();
     }
 
     public void onSearchViewTextChange(String searchQuery) {
@@ -102,7 +98,7 @@ public class SearchContactsViewModel extends ViewModel {
             callUtil.message("hi", contactPhoneNumber);
         }
         else {
-            errorMessageLiveDate.postValue("phone number doesn't exist");
+            errorMessageLiveDate.postValue(context.getString(R.string.phone_number_doesnt_exist));
         }
     }
 
