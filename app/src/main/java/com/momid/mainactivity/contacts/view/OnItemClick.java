@@ -1,12 +1,10 @@
 package com.momid.mainactivity.contacts.view;
 
-import com.momid.mainactivity.contacts.Contact;
-
 public interface OnItemClick {
 
-    public void onItemClick(Contact contact);
+    public void onItemClick(String phoneNumber);
 
-    public void onCallClick(Contact contact);
+    public void onCallClick(String phoneNumber);
 
-    public void onSmsClick(Contact contact);
+    public void onSmsClick(String phoneNumber);
 }

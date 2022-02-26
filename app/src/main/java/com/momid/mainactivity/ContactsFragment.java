@@ -58,28 +58,23 @@ public class ContactsFragment extends Fragment {
 
         adapter = new ContactsAdapter(new OnItemClick() {
             @Override
-            public void onItemClick(Contact contact) {
+            public void onItemClick(String phoneNumber) {
 
             }
 
             @Override
-            public void onCallClick(Contact contact) {
-
+            public void onCallClick(String phoneNumber) {
+                viewModel.onCall(getContext(), phoneNumber);
             }
 
             @Override
-            public void onSmsClick(Contact contact) {
-
+            public void onSmsClick(String phoneNumber) {
+                viewModel.onMessage(getContext(), phoneNumber);
             }
         });
 
         recyclerView.setAdapter(adapter);
 
-        viewModel.getContactsListLivedata().observe(requireActivity(), new Observer<PagingData<Contact>>() {
-            @Override
-            public void onChanged(PagingData<Contact> contactPagingData) {
-                adapter.submitData(getLifecycle(), contactPagingData);
-            }
-        });
+        viewModel.getContactsListLivedata().observe(requireActivity(), contactPagingData -> adapter.submitData(getLifecycle(), contactPagingData));
     }
 }

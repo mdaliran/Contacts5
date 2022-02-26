@@ -65,42 +65,34 @@ public class SearchContactsFragment extends Fragment {
 
         adapter = new ContactsAdapter(new OnItemClick() {
             @Override
-            public void onItemClick(Contact contact) {
+            public void onItemClick(String phoneNumber) {
 
             }
 
             @Override
-            public void onCallClick(Contact contact) {
-                viewModel.onCall(getContext(), contact.getPhoneNumber());
+            public void onCallClick(String phoneNumber) {
+                viewModel.onCall(getContext(), phoneNumber);
             }
 
             @Override
-            public void onSmsClick(Contact contact) {
-                viewModel.onMessage(getContext(), contact.getPhoneNumber());
+            public void onSmsClick(String phoneNumber) {
+                viewModel.onMessage(getContext(), phoneNumber);
             }
         });
 
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-//        viewModel.getSearchContactsListLivedata().observe(requireActivity(), adapter::submitList);
+
         recyclerView.setAdapter(adapter);
 
         nothingFound.setVisibility(View.GONE);
 
-        viewModel.getSearchContactsListLivedata().observe(requireActivity(), new Observer<PagingData<Contact>>() {
-            @Override
-            public void onChanged(PagingData<Contact> pagingData) {
+        viewModel.getSearchContactsListLivedata().observe(requireActivity(), pagingData -> {
 //                adapter.notifyDataSetChanged();
-                adapter.submitData(getLifecycle(), pagingData);
-            }
+            adapter.submitData(getLifecycle(), pagingData);
         });
 
-        viewModel.errorMessageLiveDate.observe(requireActivity(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show();
-            }
-        });
+        viewModel.errorMessageLiveDate.observe(requireActivity(), s -> Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show());
     }
 
     public static SearchContactsFragment getInstance() {

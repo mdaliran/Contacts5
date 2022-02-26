@@ -17,7 +17,7 @@ import com.momid.mainactivity.databinding.ItemContactBinding;
 public class ContactsAdapter extends PagingDataAdapter<Contact, RecyclerView.ViewHolder> {
 
 
-    private OnItemClick onItemClick;
+    public OnItemClick onItemClick;
 
     public ContactsAdapter(OnItemClick onItemClick) {
         super(DIFF_CALLBACK);
@@ -65,7 +65,7 @@ public class ContactsAdapter extends PagingDataAdapter<Contact, RecyclerView.Vie
                 }
             };
 
-    public static class ContactsViewHolder extends RecyclerView.ViewHolder {
+    public class ContactsViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemContactBinding binding;
 
@@ -80,6 +80,7 @@ public class ContactsAdapter extends PagingDataAdapter<Contact, RecyclerView.Vie
 
             binding.setContact(contact);
 
+            binding.setOnItemClick(onItemClick);
             boolean showNameSeparator = position == 0 || (position > 0 && !(contact.getFirstLetter()).equals(previousContactFirstLetter));
 
             boolean hideBottomSeparator = position < itemCount - 1 && !(contact.getFirstLetter().equals(nextContactFirstLetter));

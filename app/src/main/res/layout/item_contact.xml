@@ -6,6 +6,9 @@
         <import type="android.view.View"/>
         <import type="android.text.TextUtils"/>
         <variable
+            name="onItemClick"
+            type="com.momid.mainactivity.contacts.view.OnItemClick" />
+        <variable
             name="contact"
             type="com.momid.mainactivity.contacts.Contact" />
         <variable
@@ -97,7 +100,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/contact1_imageview"
         app:srcCompat="@drawable/call"
-        app:tint="@color/call_tint" />
+        app:tint="@color/call_tint"
+        android:onClick="@{() -> onItemClick.onCallClick(contact.phoneNumber)}"/>
 
     <ImageButton
         android:id="@+id/contact1_sms"
@@ -110,7 +114,8 @@
         app:layout_constraintStart_toEndOf="@+id/contact1_call"
         app:layout_constraintTop_toTopOf="@+id/contact1_call"
         app:srcCompat="@drawable/sms"
-        app:tint="@color/message_tint" />
+        app:tint="@color/message_tint"
+        android:onClick="@{() -> onItemClick.onSmsClick(contact.phoneNumber)}"/>
 
     <View
         android:id="@+id/contact1_divider"

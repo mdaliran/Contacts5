@@ -53,13 +53,10 @@ public class ContactsFragmentViewModel extends ViewModel {
     public void getAllContacts() {
 
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
-        Pager<Integer, Contact> pager = new Pager<Integer, Contact>(
-                new PagingConfig(/* pageSize = */ 25), new Function0() {
-            @Override
-            public PagingSource<Integer, Contact> invoke() {
-                pagingSource = repository.getAllContacts(allContactsRequest.getValue());
-                return pagingSource;
-            }
+        Pager<Integer, Contact> pager = new Pager<>(
+                new PagingConfig(/* pageSize = */ 25), () -> {
+            pagingSource = repository.getAllContacts(allContactsRequest.getValue());
+            return pagingSource;
         });
 
         contactsListLivedata = PagingLiveData.cachedIn(PagingLiveData.getLiveData(pager), viewModelScope);

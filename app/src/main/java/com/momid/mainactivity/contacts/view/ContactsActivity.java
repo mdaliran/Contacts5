@@ -102,44 +102,33 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
             }
         });
 
-        viewModel.searchMode.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_container);
-                NavController navController = navHostFragment.getNavController();
-                if (aBoolean) {
-                    if (navController.getCurrentDestination().getId() == R.id.contactsFragment) {
-                        navController.navigate(ContactsFragmentDirections.actionContactsFragmentToSearchContactsFragment());
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "not in emptyFragment", Toast.LENGTH_LONG).show();
-                    }
+        viewModel.searchMode.observe(this, aBoolean -> {
+            NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_container);
+            NavController navController = navHostFragment.getNavController();
+            if (aBoolean) {
+                if (navController.getCurrentDestination().getId() == R.id.contactsFragment) {
+                    navController.navigate(ContactsFragmentDirections.actionContactsFragmentToSearchContactsFragment());
                 }
                 else {
-                    navController.popBackStack();
+                    Toast.makeText(getApplicationContext(), "not in emptyFragment", Toast.LENGTH_LONG).show();
                 }
+            }
+            else {
+                navController.popBackStack();
             }
         });
 
-        viewModel.contactsPermissionNeeded.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    askForPermission();
-                }
-                else {
-                    viewModel.permissionDeniedMode.postValue(false);
-                    viewModel.onPermissionGrant();
-                }
+        viewModel.contactsPermissionNeeded.observe(this, aBoolean -> {
+            if (aBoolean) {
+                askForPermission();
+            }
+            else {
+                viewModel.permissionDeniedMode.postValue(false);
+                viewModel.onPermissionGrant();
             }
         });
 
-        viewModel.errorMessageLiveDate.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
-            }
-        });
+        viewModel.errorMessageLiveDate.observe(this, s -> Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show());
     }
 
     private void askForPermission() {
