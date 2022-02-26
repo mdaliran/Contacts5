@@ -1,6 +1,6 @@
 package com.momid.mainactivity.contacts_reader;
 
-import static com.momid.mainactivity.Utility.BitMapToString;
+import static com.momid.mainactivity.util.BitmapUtil.BitMapToString;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -29,8 +29,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 public class ContactsReaderImpl implements ContactsReader {
 
     private final Context context;
-    ContactsRepository repository;
-    PermissionHelper permissionHelper;
+    private final ContactsRepository repository;
+    private final PermissionHelper permissionHelper;
 
     @Inject
     public ContactsReaderImpl(@ApplicationContext Context context, ContactsRepository repository, PermissionHelper permissionHelper) {

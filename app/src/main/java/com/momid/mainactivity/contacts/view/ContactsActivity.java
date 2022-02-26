@@ -1,4 +1,4 @@
-package com.momid.mainactivity.contacts;
+package com.momid.mainactivity.contacts.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,9 +23,11 @@ import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.momid.mainactivity.EmptyFragmentDirections;
+import com.momid.mainactivity.ContactsFragmentDirections;
+import com.momid.mainactivity.ContactsFragmentViewModel;
 import com.momid.mainactivity.R;
-import com.momid.mainactivity.search.SearchContactsFragment;
+import com.momid.mainactivity.contacts.Contact;
+import com.momid.mainactivity.contacts.ContactsViewModel;
 import com.momid.mainactivity.search.SearchContactsViewModel;
 import com.momid.mainactivity.databinding.ActivityContactsBinding;
 
@@ -35,10 +37,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ContactsActivity extends AppCompatActivity implements ContactsClickListener {
 
     public ContactsViewModel viewModel;
+    public ContactsFragmentViewModel contactsFragmentViewModel;
     public SearchContactsViewModel searchContactsViewModel;
-    private RecyclerView recyclerView;
-    private ContactsAdapter adapter;
-    private LinearLayoutManager layoutManager;
     private SearchView searchView;
     private FrameLayout searchLayout, loadingLayout;
     private ImageButton searchBack;
@@ -60,7 +60,6 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
 
         setContentView(view);
 
-        recyclerView = binding.contactsRecycler;
         searchView = binding.contactsSearchview;
         searchLayout = binding.searchContactsFrame;
         searchBack = binding.contactsSearchBack;
@@ -69,57 +68,23 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         loadingLayout = binding.contactsLoadingLayout;
 
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
+        contactsFragmentViewModel = new ViewModelProvider(this).get(ContactsFragmentViewModel.class);
         searchContactsViewModel = new ViewModelProvider(this).get(SearchContactsViewModel.class);
 
         binding.setViewmodel(viewModel);
         binding.setClickListener(this);
 
-        viewModel.getContactsListLivedata().observe(this, new Observer<PagingData<Contact>>() {
-            @Override
-            public void onChanged(PagingData<Contact> pagingData) {
-                if (recyclerView.getAdapter() == null) {
-                    recyclerView.setAdapter(adapter);
-//                    adapter.submitData(getLifecycle(), pagingData);
-                }
-                Log.d("getContactsList", "getContactsList");
-                viewModel.loading.setValue(false);
-                adapter.submitData(getLifecycle(), pagingData);
-                viewModel.loading.setValue(false);
-//                adapter.notifyDataSetChanged();
-            }
-        });
-
-        adapter = new ContactsAdapter(new OnItemClick() {
-            @Override
-            public void onItemClick(Contact contact) {
-
-            }
-
-            @Override
-            public void onCallClick(Contact contact) {
-                viewModel.onCall(getApplicationContext(), contact.getPhoneNumber());
-            }
-
-            @Override
-            public void onSmsClick(Contact contact) {
-                viewModel.onMessage(getApplicationContext(), contact.getPhoneNumber());
-            }
-        });
-
-        adapter.addLoadStateListener(combinedLoadStates -> {
-                viewModel.loading.postValue(combinedLoadStates.getRefresh() instanceof LoadState.Loading);
-                return null;
-        });
-
-//        layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-//        recyclerView.setLayoutManager(layoutManager);
-//        viewModel.getContactsListLivedata().observe(this, adapter::submitList);
-        recyclerView.setAdapter(adapter);
-
-//        SearchContactsFragment searchContactsFragment = SearchContactsFragment.getInstance();
-//        getSupportFragmentManager().beginTransaction().add(R.id.search_contacts_frame, searchContactsFragment).commit();
         searchLayout.setVisibility(View.INVISIBLE);
         searchBack.setVisibility(View.GONE);
+
+        viewModel.readComplete.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    contactsFragmentViewModel.refresh();
+                }
+            }
+        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -143,8 +108,8 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                 NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_container);
                 NavController navController = navHostFragment.getNavController();
                 if (aBoolean) {
-                    if (navController.getCurrentDestination().getId() == R.id.emptyFragment) {
-                        navController.navigate(EmptyFragmentDirections.actionEmptyFragmentToSearchContactsFragment());
+                    if (navController.getCurrentDestination().getId() == R.id.contactsFragment) {
+                        navController.navigate(ContactsFragmentDirections.actionContactsFragmentToSearchContactsFragment());
                     }
                     else {
                         Toast.makeText(getApplicationContext(), "not in emptyFragment", Toast.LENGTH_LONG).show();
@@ -163,7 +128,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                     askForPermission();
                 }
                 else {
-                    viewModel.endPermissionDeniedMode();
+                    viewModel.permissionDeniedMode.postValue(false);
                     viewModel.onPermissionGrant();
                 }
             }
@@ -201,7 +166,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
                 viewModel.contactsPermissionNeeded.setValue(false);
             }
             else {
-                viewModel.startPermissionDeniedMode();
+                viewModel.permissionDeniedMode.postValue(true);
             }
         }
     }

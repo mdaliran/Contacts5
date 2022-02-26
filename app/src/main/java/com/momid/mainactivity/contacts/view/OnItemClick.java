@@ -1,4 +1,6 @@
-package com.momid.mainactivity.contacts;
+package com.momid.mainactivity.contacts.view;
+
+import com.momid.mainactivity.contacts.Contact;
 
 public interface OnItemClick {
 

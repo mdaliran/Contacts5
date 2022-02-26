@@ -1,6 +1,6 @@
-package com.momid.mainactivity.contacts;
+package com.momid.mainactivity.contacts.view;
 
-import static com.momid.mainactivity.Utility.StringToBitMap;
+import static com.momid.mainactivity.util.BitmapUtil.StringToBitMap;
 
 import android.graphics.drawable.ColorDrawable;
 import android.widget.ImageView;
@@ -9,7 +9,7 @@ import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.momid.mainactivity.ColorHelper;
+import com.momid.mainactivity.util.ColorUtil;
 
 public class ContactsBindingAdapter {
 
@@ -20,7 +20,7 @@ public class ContactsBindingAdapter {
 
 //        if (TextUtils.isEmpty(imageUri)) {
 //            Glide.with(imageView).load(new ColorDrawable(imageView.getContext().getColor(ColorHelper.getColor()))).into(imageView);
-            Glide.with(imageView).load(StringToBitMap(imageUri)).apply(RequestOptions.placeholderOf(new ColorDrawable(imageView.getContext().getColor(ColorHelper.getColor())))).into(imageView);
+            Glide.with(imageView).load(StringToBitMap(imageUri)).apply(RequestOptions.placeholderOf(new ColorDrawable(imageView.getContext().getColor(ColorUtil.getColor())))).into(imageView);
 //        }
 //        else {
 //            Glide.with(imageView.getContext()).load(ContactsGetter.StringToBitMap(imageUri)).into(imageView);

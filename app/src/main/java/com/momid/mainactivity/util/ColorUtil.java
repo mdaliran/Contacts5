@@ -1,4 +1,4 @@
-package com.momid.mainactivity;
+package com.momid.mainactivity.util;
 
 import com.momid.mainactivity.R;
 
@@ -9,7 +9,7 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
-public class ColorHelper {
+public class ColorUtil {
 
     private static List<Integer> colors;
 

@@ -1,4 +1,4 @@
-package com.momid.mainactivity;
+package com.momid.mainactivity.util;
 
 import android.graphics.Bitmap;
 
@@ -7,7 +7,7 @@ import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 
-public class Utility {
+public class BitmapUtil {
 
     public static String BitMapToString(Bitmap bitmap){
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();

@@ -10,7 +10,7 @@ import dagger.hilt.android.components.ViewModelComponent;
 
 @Module
 @InstallIn(ViewModelComponent.class)
-public abstract class ContactsModule {
+public abstract class ContactsReaderModule {
 
     @Binds
     public abstract ContactsReader bindContactsReader(ContactsReaderImpl contactsReaderImpl);

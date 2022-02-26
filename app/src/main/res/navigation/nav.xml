@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav"
-    app:startDestination="@id/emptyFragment">
+    app:startDestination="@id/contactsFragment">
 
     <fragment
         android:id="@+id/searchContactsFragment"
         android:name="com.momid.mainactivity.search.SearchContactsFragment"
         android:label="SearchContactsFragment"/>
     <fragment
-        android:id="@+id/emptyFragment"
-        android:name="com.momid.mainactivity.EmptyFragment">
+        android:id="@+id/contactsFragment"
+        android:name="com.momid.mainactivity.ContactsFragment">
         <action
-            android:id="@+id/action_emptyFragment_to_searchContactsFragment"
+            android:id="@+id/action_contactsFragment_to_searchContactsFragment"
             app:destination="@id/searchContactsFragment"
-            app:popUpTo="@id/emptyFragment"/>
+            app:popUpTo="@id/contactsFragment" />
     </fragment>
 </navigation>

@@ -1,4 +1,4 @@
-package com.momid.mainactivity.contacts;
+package com.momid.mainactivity.contacts.view;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.momid.mainactivity.R;
+import com.momid.mainactivity.contacts.Contact;
 import com.momid.mainactivity.databinding.ItemContactBinding;
 
 public class ContactsAdapter extends PagingDataAdapter<Contact, RecyclerView.ViewHolder> {

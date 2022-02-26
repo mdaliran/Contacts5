@@ -21,10 +21,8 @@ import android.widget.Toast;
 import com.momid.mainactivity.R;
 import com.momid.mainactivity.contacts.Contact;
 import com.momid.mainactivity.databinding.FragmentSearchContactsBinding;
-import com.momid.mainactivity.contacts.ContactsAdapter;
-import com.momid.mainactivity.contacts.OnItemClick;
-
-import java.util.List;
+import com.momid.mainactivity.contacts.view.ContactsAdapter;
+import com.momid.mainactivity.contacts.view.OnItemClick;
 
 public class SearchContactsFragment extends Fragment {
 
