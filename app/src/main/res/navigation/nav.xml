@@ -11,7 +11,7 @@
         android:label="SearchContactsFragment"/>
     <fragment
         android:id="@+id/contactsFragment"
-        android:name="com.momid.mainactivity.ContactsFragment">
+        android:name="com.momid.mainactivity.contacts_fragment.ContactsFragment">
         <action
             android:id="@+id/action_contactsFragment_to_searchContactsFragment"
             app:destination="@id/searchContactsFragment"/>

@@ -1,4 +1,4 @@
-package com.momid.mainactivity;
+package com.momid.mainactivity.contacts_fragment;
 
 import android.content.Context;
 
@@ -12,6 +12,7 @@ import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
 import androidx.paging.PagingSource;
 
+import com.momid.mainactivity.R;
 import com.momid.mainactivity.contacts.AllContactsRequest;
 import com.momid.mainactivity.contacts.Contact;
 import com.momid.mainactivity.contacts.ContactsRepository;

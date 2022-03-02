@@ -1,4 +1,4 @@
-package com.momid.mainactivity;
+package com.momid.mainactivity.contacts_fragment;
 
 import android.os.Bundle;
 
@@ -6,16 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.paging.PagingData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.momid.mainactivity.contacts.Contact;
+import com.momid.mainactivity.R;
 import com.momid.mainactivity.contacts.view.ContactsAdapter;
 import com.momid.mainactivity.contacts.view.OnItemClick;
 import com.momid.mainactivity.databinding.FragmentContactsBinding;
