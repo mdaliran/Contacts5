@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.paging.PagingSource;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -29,7 +30,7 @@ public interface ContactsDao {
     @Insert
     public void addContact(Contact contact);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void addAllContacts(List<Contact> contacts);
 
     @Update

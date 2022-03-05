@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "CONTACTS")
 public class Contact {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int id;
     @ColumnInfo
     private String contactId;

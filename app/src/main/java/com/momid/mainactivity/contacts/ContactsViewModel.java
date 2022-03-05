@@ -49,7 +49,7 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
 
     public void onPermissionGrant() {
 
-            contactsReader.startToRead(this);
+        contactsReader.startToRead(this);
     }
 
     @Override

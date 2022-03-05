@@ -48,6 +48,7 @@ public class ContactsReaderImpl implements ContactsReader {
 
             if (contactsCount > 0) {
                 runOnUiThread(contactsReaderListener::alreadyStored);
+                repository.insertContactsToDatabase(startToGetContactsOnDevice());
             }
             else {
                 if (permissionHelper.hasContactsPermission()) {
@@ -120,7 +121,7 @@ public class ContactsReaderImpl implements ContactsReader {
 //                                    || type == ContactsContract.CommonDataKinds.Phone.TYPE_HOME
 //                                    || type == ContactsContract.CommonDataKinds.Phone.TYPE_WORK) {
                 Contact info = new Contact();
-                info.setContactId(id);
+                info.setId(Integer.valueOf(id));
                 info.setFullName(name);
                 info.setPhoneNumber(lastnumber);
                 info.setImageUri(photoString);

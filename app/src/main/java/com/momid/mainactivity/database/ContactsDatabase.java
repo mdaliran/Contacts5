@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase;
 
 import com.momid.mainactivity.contacts.Contact;
 
-@Database(entities = {Contact.class}, version = 3)
+@Database(entities = {Contact.class}, version = 5)
 public abstract class ContactsDatabase extends RoomDatabase {
 
     public abstract ContactsDao contactsDao();
