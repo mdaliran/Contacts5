@@ -16,110 +16,6 @@
         android:layout_height="match_parent"
         tools:context=".contacts.view.ContactsActivity">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/primary"
-            android:elevation="0dp"
-            android:minHeight="50dp">
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:elevation="0dp"
-                android:minHeight="50dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:toolbarId="@+id/toolbar">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <ImageButton
-                            android:id="@+id/contacts_search_back"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="8dp"
-                            android:background="@android:color/transparent"
-                            android:onClick="@{() -> clickListener.onSearchBackClick()}"
-                            android:padding="10dp"
-                            android:tint="@color/white"
-                            android:visibility="@{viewmodel.searchMode ? View.VISIBLE : View.GONE}"
-                            app:srcCompat="@drawable/back" />
-
-                        <SearchView
-                            android:id="@+id/contacts_searchview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:background="@drawable/round3"
-                            android:backgroundTint="@color/white"
-                            android:elevation="5dp"
-                            android:iconifiedByDefault="false"
-                            android:inputType="textPersonName"
-                            android:queryBackground="@color/white"
-                            android:queryHint="جستجوی مخاطبین" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:layout_marginLeft="35dp"
-                        android:layout_marginRight="35dp"
-                        android:gravity="center|right"
-                        android:text="@string/name"
-                        android:textColor="@color/white"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/contacts_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="LinearLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-        <FrameLayout
-            android:id="@+id/search_contacts_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:visibility="@{viewmodel.searchMode ? View.VISIBLE : View.GONE}">
-
-        </FrameLayout>
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/navigation_container"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:defaultNavHost="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:navGraph="@navigation/nav" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/contacts_permission_denied_layout"
             android:layout_width="match_parent"
@@ -154,12 +50,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:onClick="@{() -> clickListener.onGivePermissionClick()}"
                 android:text="@string/give_permission"
                 android:textColor="@color/primary"
                 app:layout_constraintEnd_toEndOf="@+id/textView"
                 app:layout_constraintStart_toStartOf="@+id/textView"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                android:onClick="@{() -> clickListener.onGivePermissionClick()}"/>
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <FrameLayout
@@ -177,5 +73,15 @@
                 android:indeterminate="true"
                 android:indeterminateTint="@color/primary" />
         </FrameLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/navigation_container"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:navGraph="@navigation/nav" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

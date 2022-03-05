@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.momid.mainactivity.R;
+import com.momid.mainactivity.contacts.SharedViewModel;
 import com.momid.mainactivity.contacts.view.ContactsAdapter;
 import com.momid.mainactivity.contacts.view.OnItemClick;
 import com.momid.mainactivity.databinding.FragmentContactsBinding;
@@ -21,6 +22,7 @@ import com.momid.mainactivity.databinding.FragmentContactsBinding;
 public class ContactsFragment extends Fragment {
 
     private ContactsFragmentViewModel viewModel;
+    private SharedViewModel sharedViewModel;
     private RecyclerView recyclerView;
     private ContactsAdapter adapter;
     private FragmentContactsBinding binding;
@@ -49,8 +51,10 @@ public class ContactsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(requireActivity()).get(ContactsFragmentViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         binding.setLifecycleOwner(requireActivity());
+        binding.setClickListener(sharedViewModel.getContactsClickListener());
 
         recyclerView = binding.contactsRecycler;
 
@@ -74,5 +78,12 @@ public class ContactsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         viewModel.getContactsListLivedata().observe(requireActivity(), contactPagingData -> adapter.submitData(getLifecycle(), contactPagingData));
+
+        sharedViewModel.readComplete.observe(requireActivity(), readComplete ->  {
+            if (readComplete) {
+                viewModel.refresh();
+            }
+        });
     }
 }
+

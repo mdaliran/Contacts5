@@ -5,4 +5,7 @@ public interface ContactsClickListener {
     public void onGivePermissionClick();
 
     public void onSearchBackClick();
+
+
+    public void onSearchClick();
 }

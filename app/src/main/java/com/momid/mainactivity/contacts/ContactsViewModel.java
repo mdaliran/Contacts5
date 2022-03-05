@@ -2,30 +2,18 @@ package com.momid.mainactivity.contacts;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelKt;
-import androidx.paging.Pager;
-import androidx.paging.PagingConfig;
-import androidx.paging.PagingData;
-import androidx.paging.PagingLiveData;
-import androidx.paging.PagingSource;
 
-import com.momid.mainactivity.util.CallUtil;
-import com.momid.mainactivity.R;
 import com.momid.mainactivity.contacts_reader.ContactsReader;
 import com.momid.mainactivity.contacts_reader.ContactsReaderListener;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import kotlin.jvm.functions.Function0;
-import kotlinx.coroutines.CoroutineScope;
 
 @HiltViewModel
 public class ContactsViewModel extends ViewModel implements ContactsReaderListener {
