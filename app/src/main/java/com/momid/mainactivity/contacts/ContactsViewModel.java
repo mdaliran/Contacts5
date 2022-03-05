@@ -37,8 +37,6 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
 
             this.contactsReader = contactsReader;
 
-//            getAllContacts();
-
             contactsReader.startToRead(this);
     }
 
@@ -46,13 +44,6 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
 
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             activity.requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CONTACT);
-        }
-    }
-
-    public void onSearchViewTextChange(String searchQuery) {
-
-        if (!searchQuery.equals("")) {
-            searchMode.setValue(true);
         }
     }
 
@@ -74,7 +65,6 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
     @Override
     public void readEnd() {
         loading.postValue(false);
-//        pagingSource.invalidate();
         readComplete.postValue(true);
     }
 
