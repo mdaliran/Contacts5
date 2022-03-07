@@ -21,4 +21,6 @@ public interface ContactsRepository {
     LiveData<Integer> getSearchContactsCount(String searchQuery);
 
     int getContactsCount1();
+
+    void getRemoteContacts(DataCallback<List<Contact>> callback);
 }

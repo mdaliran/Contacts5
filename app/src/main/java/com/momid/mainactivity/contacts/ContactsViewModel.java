@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModel;
 import com.momid.mainactivity.contacts_reader.ContactsReader;
 import com.momid.mainactivity.contacts_reader.ContactsReaderListener;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -28,16 +30,33 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
 
     public MutableLiveData<String> errorMessageLiveDate = new MutableLiveData<>();
 
+    public ContactsRepository repository;
     public ContactsReader contactsReader;
 
     private static final int PERMISSION_REQUEST_CONTACT = 0;
 
     @Inject
-    public ContactsViewModel(ContactsReader contactsReader) {
+    public ContactsViewModel(ContactsReader contactsReader, ContactsRepository repository) {
 
-            this.contactsReader = contactsReader;
+        this.repository = repository;
+        this.contactsReader = contactsReader;
 
-            contactsReader.startToRead(this);
+        loading.postValue(true);
+
+        repository.getRemoteContacts(new DataCallback<List<Contact>>() {
+            @Override
+            public void onFinish(List<Contact> contacts) {
+                contactsReader.startToRead(contacts, ContactsViewModel.this);
+                loading.postValue(false);
+            }
+
+            @Override
+            public void onFail(String error) {
+
+            }
+        });
+
+//        contactsReader.startToRead(this);
     }
 
     public void askForPermission(Activity activity) {
@@ -49,7 +68,19 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
 
     public void onPermissionGrant() {
 
-        contactsReader.startToRead(this);
+        loading.postValue(true);
+        repository.getRemoteContacts(new DataCallback<List<Contact>>() {
+            @Override
+            public void onFinish(List<Contact> contacts) {
+                contactsReader.startToRead(contacts, ContactsViewModel.this);
+                loading.postValue(false);
+            }
+
+            @Override
+            public void onFail(String error) {
+
+            }
+        });
     }
 
     @Override
@@ -74,4 +105,3 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
         contactsPermissionNeeded.postValue(true);
     }
 }
-

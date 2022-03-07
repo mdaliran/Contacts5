@@ -31,6 +31,7 @@ public class ContactsReaderImpl implements ContactsReader {
     private final Context context;
     private final ContactsRepository repository;
     private final PermissionHelper permissionHelper;
+//    private List<Contact> remoteContacts = new ArrayList<>();
 
     @Inject
     public ContactsReaderImpl(@ApplicationContext Context context, ContactsRepository repository, PermissionHelper permissionHelper) {
@@ -39,8 +40,16 @@ public class ContactsReaderImpl implements ContactsReader {
         this.permissionHelper = permissionHelper;
     }
 
+//    public ContactsReaderImpl withRemoteContacts(List<Contact> remoteContacts) {
+//
+//        this.remoteContacts.clear();
+//        this.remoteContacts.addAll(remoteContacts);
+//
+//        return this;
+//    }
+
     @Override
-    public void startToRead(ContactsReaderListener contactsReaderListener) {
+    public void startToRead(List<Contact> remoteContacts, ContactsReaderListener contactsReaderListener) {
 
         new Thread(() -> {
 
@@ -49,6 +58,9 @@ public class ContactsReaderImpl implements ContactsReader {
             if (contactsCount > 0) {
                 runOnUiThread(contactsReaderListener::alreadyStored);
                 repository.insertContactsToDatabase(startToGetContactsOnDevice());
+                if (!remoteContacts.isEmpty()) {
+                    repository.insertContactsToDatabase(remoteContacts);
+                }
             }
             else {
                 if (permissionHelper.hasContactsPermission()) {
@@ -56,6 +68,9 @@ public class ContactsReaderImpl implements ContactsReader {
                     runOnUiThread(contactsReaderListener::readStart);
 
                     repository.insertContactsToDatabase(startToGetContactsOnDevice());
+                    if (!remoteContacts.isEmpty()) {
+                        repository.insertContactsToDatabase(remoteContacts);
+                    }
 
                     runOnUiThread(contactsReaderListener::readEnd);
                 }
@@ -121,10 +136,11 @@ public class ContactsReaderImpl implements ContactsReader {
 //                                    || type == ContactsContract.CommonDataKinds.Phone.TYPE_HOME
 //                                    || type == ContactsContract.CommonDataKinds.Phone.TYPE_WORK) {
                 Contact info = new Contact();
-                info.setId(Integer.valueOf(id));
+                info.setId(id);
                 info.setFullName(name);
                 info.setPhoneNumber(lastnumber);
                 info.setImageUri(photoString);
+                info.setSource("LOCAL");
 //                        info.photo = photo;
 //                        info.photoURI= pURI;
                 list.add(info);

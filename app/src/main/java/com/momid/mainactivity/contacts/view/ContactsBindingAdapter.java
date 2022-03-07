@@ -20,7 +20,12 @@ public class ContactsBindingAdapter {
 
 //        if (TextUtils.isEmpty(imageUri)) {
 //            Glide.with(imageView).load(new ColorDrawable(imageView.getContext().getColor(ColorHelper.getColor()))).into(imageView);
+        if (imageUri.startsWith("http")) {
+            Glide.with(imageView).load(imageUri).apply(RequestOptions.placeholderOf(new ColorDrawable(imageView.getContext().getColor(ColorUtil.getColor())))).into(imageView);
+        }
+        else {
             Glide.with(imageView).load(StringToBitMap(imageUri)).apply(RequestOptions.placeholderOf(new ColorDrawable(imageView.getContext().getColor(ColorUtil.getColor())))).into(imageView);
+        }
 //        }
 //        else {
 //            Glide.with(imageView.getContext()).load(ContactsGetter.StringToBitMap(imageUri)).into(imageView);

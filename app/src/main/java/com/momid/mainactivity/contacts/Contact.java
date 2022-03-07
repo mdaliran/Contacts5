@@ -1,20 +1,29 @@
 package com.momid.mainactivity.contacts;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.Random;
+
 @Entity(tableName = "CONTACTS")
 public class Contact {
 
     @PrimaryKey
-    private int id;
+    @SerializedName("_id")
+    @NonNull
+    private String id;
     @ColumnInfo
     private String contactId;
     @Ignore
+    @SerializedName("firstName")
     private String firstName;
     @Ignore
+    @SerializedName("lastName")
     private String lastName;
     @ColumnInfo(name = "full_name")
     private String fullName;
@@ -23,13 +32,28 @@ public class Contact {
     @Ignore
     private String address;
     @ColumnInfo(name = "image_uri")
+    @SerializedName("avatar")
     private String imageUri;
 
-    public int getId() {
+    private String source = "REMOTE";
+
+    public Contact() {
+
+//        fullName = firstName + lastName;
+    }
+
+    public void setUpForRemote() {
+
+        fullName = firstName + lastName;
+        source = "REMOTE";
+//        id = new Random().nextInt(100000) + 1000;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -55,6 +79,7 @@ public class Contact {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+        fullName = firstName + lastName;
     }
 
     public String getFullName() {
@@ -91,5 +116,13 @@ public class Contact {
 
     public String getFirstLetter() {
         return String.valueOf(fullName.charAt(0));
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

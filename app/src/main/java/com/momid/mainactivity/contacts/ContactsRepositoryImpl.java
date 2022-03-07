@@ -4,11 +4,18 @@ import androidx.lifecycle.LiveData;
 import androidx.paging.PagingSource;
 
 import com.momid.mainactivity.database.ContactsDao;
+import com.momid.mainactivity.network.ContactsClient;
+import com.momid.mainactivity.network.NetworkService;
 import com.momid.mainactivity.search.SearchContactsRequest;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ContactsRepositoryImpl implements ContactsRepository {
 
@@ -53,5 +60,26 @@ public class ContactsRepositoryImpl implements ContactsRepository {
     public int getContactsCount1() {
 
         return contactsDao.getContactsCount();
+    }
+
+    public void getRemoteContacts(DataCallback<List<Contact>> callback) {
+
+        Retrofit retrofit = ContactsClient.getClient();
+        NetworkService networkService = retrofit.create(NetworkService.class);
+        networkService.getContacts().enqueue(new Callback<List<Contact>>() {
+            @Override
+            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
+                List<Contact> body = response.body();
+                for (Contact contact : body) {
+                    contact.setUpForRemote();
+                }
+                callback.onFinish(body);
+            }
+
+            @Override
+            public void onFailure(Call<List<Contact>> call, Throwable t) {
+                callback.onFail(t.getMessage());
+            }
+        });
     }
 }
