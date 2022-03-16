@@ -1,4 +1,4 @@
-package com.momid.mainactivity.contacts.view;
+package com.momid.mainactivity.contacts.views;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.momid.mainactivity.R;
+import com.momid.mainactivity.contacts.ContactsClickListener;
 import com.momid.mainactivity.contacts.SharedViewModel;
 import com.momid.mainactivity.contacts.ContactsViewModel;
 import com.momid.mainactivity.contacts_fragment.ContactsFragmentDirections;
@@ -49,8 +50,8 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         binding.setViewmodel(viewModel);
         binding.setClickListener(this);
 
-        viewModel.readComplete.observe(this, aBoolean -> {
-            sharedViewModel.readComplete.postValue(true);
+        viewModel.shouldRefresh.observe(this, aBoolean -> {
+            sharedViewModel.dbRefresh.postValue(true);
         });
 
         viewModel.searchMode.observe(this, aBoolean -> {
@@ -82,6 +83,13 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
     private void askForPermission() {
 
         viewModel.askForPermission(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
     }
 
     @Override

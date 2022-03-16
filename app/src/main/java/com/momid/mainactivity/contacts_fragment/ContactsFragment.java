@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,8 @@ import android.view.ViewGroup;
 
 import com.momid.mainactivity.R;
 import com.momid.mainactivity.contacts.SharedViewModel;
-import com.momid.mainactivity.contacts.view.ContactsAdapter;
-import com.momid.mainactivity.contacts.view.OnItemClick;
+import com.momid.mainactivity.contacts.ContactsAdapter;
+import com.momid.mainactivity.contacts.OnItemClick;
 import com.momid.mainactivity.databinding.FragmentContactsBinding;
 
 public class ContactsFragment extends Fragment {
@@ -25,6 +26,7 @@ public class ContactsFragment extends Fragment {
     private SharedViewModel sharedViewModel;
     private RecyclerView recyclerView;
     private ContactsAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private FragmentContactsBinding binding;
 
     public ContactsFragment() {
@@ -57,6 +59,7 @@ public class ContactsFragment extends Fragment {
         binding.setClickListener(sharedViewModel.getContactsClickListener());
 
         recyclerView = binding.contactsRecycler;
+        swipeRefreshLayout = binding.contactsSwip;
 
         adapter = new ContactsAdapter(new OnItemClick() {
             @Override
@@ -79,10 +82,15 @@ public class ContactsFragment extends Fragment {
 
         viewModel.getContactsListLivedata().observe(requireActivity(), contactPagingData -> adapter.submitData(getLifecycle(), contactPagingData));
 
-        sharedViewModel.readComplete.observe(requireActivity(), readComplete ->  {
-            if (readComplete) {
+        sharedViewModel.dbRefresh.observe(requireActivity(), dbRefresh ->  {
+            if (dbRefresh) {
                 viewModel.refresh();
             }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            viewModel.refresh();
+            swipeRefreshLayout.setRefreshing(false);
         });
     }
 }

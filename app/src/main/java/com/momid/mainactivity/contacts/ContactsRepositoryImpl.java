@@ -42,7 +42,7 @@ public class ContactsRepositoryImpl implements ContactsRepository {
     @Override
     public void insertContactsToDatabase(List<Contact> contacts) {
 
-        contactsDao.addAllContacts(contacts);
+        new Thread(() -> contactsDao.addAllContacts(contacts)).start();
     }
 
     @Override
@@ -81,5 +81,10 @@ public class ContactsRepositoryImpl implements ContactsRepository {
                 callback.onFail(t.getMessage());
             }
         });
+    }
+
+    public void removeAllContacts() {
+
+        contactsDao.removeAll();
     }
 }

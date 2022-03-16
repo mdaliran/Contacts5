@@ -9,7 +9,7 @@
             type="com.momid.mainactivity.search.SearchContactsViewModel" />
         <variable
             name="clickListener"
-            type="com.momid.mainactivity.contacts.view.ContactsClickListener" />
+            type="com.momid.mainactivity.contacts.ContactsClickListener" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

@@ -1,4 +1,4 @@
-package com.momid.mainactivity.contacts.view;
+package com.momid.mainactivity.contacts.views;
 
 import static com.momid.mainactivity.util.BitmapUtil.StringToBitMap;
 
@@ -20,7 +20,7 @@ public class ContactsBindingAdapter {
 
 //        if (TextUtils.isEmpty(imageUri)) {
 //            Glide.with(imageView).load(new ColorDrawable(imageView.getContext().getColor(ColorHelper.getColor()))).into(imageView);
-        if (imageUri.startsWith("http")) {
+        if (imageUri != null && imageUri.startsWith("http")) {
             Glide.with(imageView).load(imageUri).apply(RequestOptions.placeholderOf(new ColorDrawable(imageView.getContext().getColor(ColorUtil.getColor())))).into(imageView);
         }
         else {

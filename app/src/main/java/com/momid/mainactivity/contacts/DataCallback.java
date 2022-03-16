@@ -6,3 +6,4 @@ public interface DataCallback<T> {
 
     public void onFail(String error);
 }
+

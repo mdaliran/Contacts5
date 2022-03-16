@@ -23,4 +23,6 @@ public interface ContactsRepository {
     int getContactsCount1();
 
     void getRemoteContacts(DataCallback<List<Contact>> callback);
+
+    void removeAllContacts();
 }

@@ -21,12 +21,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class ContactsViewModel extends ViewModel implements ContactsReaderListener {
 
     public MutableLiveData<Boolean> loading = new MutableLiveData<>();
-    public MutableLiveData<String> loadError = new MutableLiveData<>();
+//    public MutableLiveData<String> loadError = new MutableLiveData<>();
     public MutableLiveData<Boolean> searchMode = new MutableLiveData<>();
     public MutableLiveData<Boolean> contactsPermissionNeeded = new MutableLiveData<>();
     public MutableLiveData<Boolean> permissionDeniedMode = new MutableLiveData<>();
     public MutableLiveData<Boolean> noContactExists = new MutableLiveData<>();
-    public MutableLiveData<Boolean> readComplete = new MutableLiveData<>();
+    public MutableLiveData<Boolean> shouldRefresh = new MutableLiveData<>();
 
     public MutableLiveData<String> errorMessageLiveDate = new MutableLiveData<>();
 
@@ -41,22 +41,13 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
         this.repository = repository;
         this.contactsReader = contactsReader;
 
-        loading.postValue(true);
+//        loading.postValue(true);
 
-        repository.getRemoteContacts(new DataCallback<List<Contact>>() {
-            @Override
-            public void onFinish(List<Contact> contacts) {
-                contactsReader.startToRead(contacts, ContactsViewModel.this);
-                loading.postValue(false);
-            }
+        new Thread(() -> {
+            repository.removeAllContacts();
+            contactsReader.startToRead(this);
+        }).start();
 
-            @Override
-            public void onFail(String error) {
-
-            }
-        });
-
-//        contactsReader.startToRead(this);
     }
 
     public void askForPermission(Activity activity) {
@@ -68,19 +59,25 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
 
     public void onPermissionGrant() {
 
-        loading.postValue(true);
-        repository.getRemoteContacts(new DataCallback<List<Contact>>() {
-            @Override
-            public void onFinish(List<Contact> contacts) {
-                contactsReader.startToRead(contacts, ContactsViewModel.this);
-                loading.postValue(false);
-            }
+//        loading.postValue(true);
 
-            @Override
-            public void onFail(String error) {
+//        repository.getRemoteContacts(new DataCallback<List<Contact>>() {
+//            @Override
+//            public void onFinish(List<Contact> contacts) {
+//                repository.insertContactsToDatabase(contacts);
+////                contactsReader.startToRead(contacts, ContactsViewModel.this);
+////                loading.postValue(false);
+//            }
+//
+//            @Override
+//            public void onFail(String error) {
+//
+//            }
+//        });
 
-            }
-        });
+        new Thread(repository::removeAllContacts).start();
+
+        contactsReader.startToRead(this);
     }
 
     @Override
@@ -96,7 +93,22 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
     @Override
     public void readEnd() {
         loading.postValue(false);
-        readComplete.postValue(true);
+        shouldRefresh.postValue(true);
+
+        repository.getRemoteContacts(new DataCallback<List<Contact>>() {
+            @Override
+            public void onFinish(List<Contact> contacts) {
+                repository.insertContactsToDatabase(contacts);
+                shouldRefresh.postValue(true);
+//                contactsReader.startToRead(contacts, ContactsViewModel.this);
+//                loading.postValue(false);
+            }
+
+            @Override
+            public void onFail(String error) {
+
+            }
+        });
     }
 
     @Override

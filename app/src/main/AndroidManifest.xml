@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.MainActivity">
         <activity
-            android:name=".contacts.view.ContactsActivity"
+            android:name=".contacts.views.ContactsActivity"
             android:exported="true"
             android:configChanges="orientation|screenSize">
             <intent-filter>

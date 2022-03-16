@@ -1,6 +1,7 @@
 package com.momid.mainactivity.contacts_fragment;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -26,14 +27,14 @@ import kotlinx.coroutines.CoroutineScope;
 @HiltViewModel
 public class ContactsFragmentViewModel extends ViewModel {
 
-    private MutableLiveData<AllContactsRequest> allContactsRequest = new MutableLiveData<>();
-    private LiveData<PagingData<Contact>> contactsListLivedata;
-
+    public static final int PAGE_SIZE = 25;
     public MutableLiveData<String> errorMessageLiveDate = new MutableLiveData<>();
 
+    private final MutableLiveData<AllContactsRequest> allContactsRequest = new MutableLiveData<>();
+    private LiveData<PagingData<Contact>> contactsListLivedata;
     private PagingSource<Integer, Contact> pagingSource;
 
-    public ContactsRepository repository;
+    private final ContactsRepository repository;
     @Inject
     public CallUtil callUtil;
 
@@ -53,7 +54,7 @@ public class ContactsFragmentViewModel extends ViewModel {
 
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         Pager<Integer, Contact> pager = new Pager<>(
-                new PagingConfig(/* pageSize = */ 25), () -> {
+                new PagingConfig(PAGE_SIZE), () -> {
             pagingSource = repository.getAllContacts(allContactsRequest.getValue());
             return pagingSource;
         });
@@ -68,21 +69,20 @@ public class ContactsFragmentViewModel extends ViewModel {
 
     public void onCall(Context context, String contactPhoneNumber) {
 
-        if (contactPhoneNumber != null && !contactPhoneNumber.equals("0")) {
-            callUtil.call(contactPhoneNumber);
-        }
-        else {
+        if (TextUtils.isEmpty(contactPhoneNumber) || contactPhoneNumber.equals("0")) {
             errorMessageLiveDate.postValue(context.getString(R.string.phone_number_doesnt_exist));
+
+        } else {
+            callUtil.call(contactPhoneNumber);
         }
     }
 
     public void onMessage(Context context, String contactPhoneNumber) {
 
-        if (contactPhoneNumber != null && !contactPhoneNumber.equals("0")) {
-            callUtil.message("hi", contactPhoneNumber);
-        }
-        else {
+        if (TextUtils.isEmpty(contactPhoneNumber) || contactPhoneNumber.equals("0")) {
             errorMessageLiveDate.postValue(context.getString(R.string.phone_number_doesnt_exist));
+        } else {
+            callUtil.message("hi", contactPhoneNumber);
         }
     }
 }

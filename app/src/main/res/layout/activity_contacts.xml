@@ -9,12 +9,12 @@
             type="com.momid.mainactivity.contacts.ContactsViewModel" />
         <variable
             name="clickListener"
-            type="com.momid.mainactivity.contacts.view.ContactsClickListener" />
+            type="com.momid.mainactivity.contacts.ContactsClickListener" />
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".contacts.view.ContactsActivity">
+        tools:context=".contacts.views.ContactsActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/contacts_permission_denied_layout"

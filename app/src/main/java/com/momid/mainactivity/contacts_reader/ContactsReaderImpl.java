@@ -49,7 +49,7 @@ public class ContactsReaderImpl implements ContactsReader {
 //    }
 
     @Override
-    public void startToRead(List<Contact> remoteContacts, ContactsReaderListener contactsReaderListener) {
+    public void startToRead(ContactsReaderListener contactsReaderListener) {
 
         new Thread(() -> {
 
@@ -58,9 +58,9 @@ public class ContactsReaderImpl implements ContactsReader {
             if (contactsCount > 0) {
                 runOnUiThread(contactsReaderListener::alreadyStored);
                 repository.insertContactsToDatabase(startToGetContactsOnDevice());
-                if (!remoteContacts.isEmpty()) {
-                    repository.insertContactsToDatabase(remoteContacts);
-                }
+//                if (!remoteContacts.isEmpty()) {
+//                    repository.insertContactsToDatabase(remoteContacts);
+//                }
             }
             else {
                 if (permissionHelper.hasContactsPermission()) {
@@ -68,9 +68,9 @@ public class ContactsReaderImpl implements ContactsReader {
                     runOnUiThread(contactsReaderListener::readStart);
 
                     repository.insertContactsToDatabase(startToGetContactsOnDevice());
-                    if (!remoteContacts.isEmpty()) {
-                        repository.insertContactsToDatabase(remoteContacts);
-                    }
+//                    if (!remoteContacts.isEmpty()) {
+//                        repository.insertContactsToDatabase(remoteContacts);
+//                    }
 
                     runOnUiThread(contactsReaderListener::readEnd);
                 }
