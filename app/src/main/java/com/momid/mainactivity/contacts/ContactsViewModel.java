@@ -8,8 +8,10 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.common.collect.Lists;
 import com.momid.mainactivity.contacts_reader.ContactsReader;
 import com.momid.mainactivity.contacts_reader.ContactsReaderListener;
+import com.momid.mainactivity.database.ContactsDao;
 
 import java.util.List;
 
@@ -41,13 +43,29 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
         this.repository = repository;
         this.contactsReader = contactsReader;
 
-//        loading.postValue(true);
+        refresh();
+    }
 
-        new Thread(() -> {
-            repository.removeAllContacts();
-            contactsReader.startToRead(this);
-        }).start();
+    public void refresh() {
 
+        contactsReader.startToRead(this);
+
+        repository.getRemoteContacts(new DataCallback<List<Contact>>() {
+            @Override
+            public void onFinish(List<Contact> contacts) {
+
+                new Thread(() -> {
+                    repository.removeUnnesseceryContacts(ContactsDao.REMOTE, Lists.transform(contacts, Contact::getId));
+                    repository.insertContactsToDatabase(contacts);
+                    shouldRefresh.postValue(true);
+                }).start();
+            }
+
+            @Override
+            public void onFail(String error) {
+
+            }
+        });
     }
 
     public void askForPermission(Activity activity) {
@@ -59,25 +77,7 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
 
     public void onPermissionGrant() {
 
-//        loading.postValue(true);
-
-//        repository.getRemoteContacts(new DataCallback<List<Contact>>() {
-//            @Override
-//            public void onFinish(List<Contact> contacts) {
-//                repository.insertContactsToDatabase(contacts);
-////                contactsReader.startToRead(contacts, ContactsViewModel.this);
-////                loading.postValue(false);
-//            }
-//
-//            @Override
-//            public void onFail(String error) {
-//
-//            }
-//        });
-
-        new Thread(repository::removeAllContacts).start();
-
-        contactsReader.startToRead(this);
+        refresh();
     }
 
     @Override
@@ -93,22 +93,7 @@ public class ContactsViewModel extends ViewModel implements ContactsReaderListen
     @Override
     public void readEnd() {
         loading.postValue(false);
-        shouldRefresh.postValue(true);
-
-        repository.getRemoteContacts(new DataCallback<List<Contact>>() {
-            @Override
-            public void onFinish(List<Contact> contacts) {
-                repository.insertContactsToDatabase(contacts);
-                shouldRefresh.postValue(true);
-//                contactsReader.startToRead(contacts, ContactsViewModel.this);
-//                loading.postValue(false);
-            }
-
-            @Override
-            public void onFail(String error) {
-
-            }
-        });
+        shouldRefresh.setValue(true);
     }
 
     @Override

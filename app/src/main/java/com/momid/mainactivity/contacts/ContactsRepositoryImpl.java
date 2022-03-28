@@ -5,7 +5,7 @@ import androidx.paging.PagingSource;
 
 import com.momid.mainactivity.database.ContactsDao;
 import com.momid.mainactivity.network.ContactsClient;
-import com.momid.mainactivity.network.NetworkService;
+import com.momid.mainactivity.network.ContactsNetworkService;
 import com.momid.mainactivity.search.SearchContactsRequest;
 
 import java.util.List;
@@ -20,11 +20,13 @@ import retrofit2.Retrofit;
 public class ContactsRepositoryImpl implements ContactsRepository {
 
     public ContactsDao contactsDao;
+    public ContactsNetworkService contactsNetworkService;
 
     @Inject
-    public ContactsRepositoryImpl(ContactsDao contactsDao) {
+    public ContactsRepositoryImpl(ContactsDao contactsDao, ContactsNetworkService contactsNetworkService) {
 
         this.contactsDao = contactsDao;
+        this.contactsNetworkService = contactsNetworkService;
     }
 
     @Override
@@ -64,9 +66,7 @@ public class ContactsRepositoryImpl implements ContactsRepository {
 
     public void getRemoteContacts(DataCallback<List<Contact>> callback) {
 
-        Retrofit retrofit = ContactsClient.getClient();
-        NetworkService networkService = retrofit.create(NetworkService.class);
-        networkService.getContacts().enqueue(new Callback<List<Contact>>() {
+        contactsNetworkService.getContacts().enqueue(new Callback<List<Contact>>() {
             @Override
             public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
                 List<Contact> body = response.body();
@@ -86,5 +86,10 @@ public class ContactsRepositoryImpl implements ContactsRepository {
     public void removeAllContacts() {
 
         contactsDao.removeAll();
+    }
+
+    public void removeUnnesseceryContacts(String source, List<String> ids) {
+
+        contactsDao.removeIfNotInIds(source, ids);
     }
 }

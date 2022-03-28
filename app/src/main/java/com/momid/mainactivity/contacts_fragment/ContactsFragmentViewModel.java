@@ -54,7 +54,7 @@ public class ContactsFragmentViewModel extends ViewModel {
 
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         Pager<Integer, Contact> pager = new Pager<>(
-                new PagingConfig(PAGE_SIZE), () -> {
+                new PagingConfig(PAGE_SIZE, 10, false, 50), () -> {
             pagingSource = repository.getAllContacts(allContactsRequest.getValue());
             return pagingSource;
         });

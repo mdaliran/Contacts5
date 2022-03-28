@@ -7,7 +7,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
-public interface NetworkService {
+public interface ContactsNetworkService {
 
     @GET("Contact")
     public Call<List<Contact>> getContacts();

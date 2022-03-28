@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -50,9 +51,9 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
         binding.setViewmodel(viewModel);
         binding.setClickListener(this);
 
-        viewModel.shouldRefresh.observe(this, aBoolean -> {
-            sharedViewModel.dbRefresh.postValue(true);
-        });
+        viewModel.shouldRefresh.observe(this, aBoolean -> sharedViewModel.dbRefresh.postValue(aBoolean));
+
+//        sharedViewModel.dbRefresh.observe(this, aBoolean -> viewModel.shouldRefresh.postValue(aBoolean));
 
         viewModel.searchMode.observe(this, aBoolean -> {
             NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_container);
@@ -89,7 +90,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsClick
     protected void onResume() {
         super.onResume();
 
-
+        viewModel.refresh();
     }
 
     @Override

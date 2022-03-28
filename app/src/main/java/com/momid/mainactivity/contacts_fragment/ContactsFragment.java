@@ -84,12 +84,14 @@ public class ContactsFragment extends Fragment {
 
         sharedViewModel.dbRefresh.observe(requireActivity(), dbRefresh ->  {
             if (dbRefresh) {
-                viewModel.refresh();
+//                viewModel.refresh();
+                adapter.refresh();
             }
         });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            viewModel.refresh();
+//            viewModel.refresh();
+            adapter.refresh();
             swipeRefreshLayout.setRefreshing(false);
         });
     }

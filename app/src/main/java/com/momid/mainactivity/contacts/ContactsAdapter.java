@@ -38,8 +38,8 @@ public class ContactsAdapter extends PagingDataAdapter<Contact, RecyclerView.Vie
 
         if (contact != null) {
 
-            String previousContactFirstLetter = position > 0 ? String.valueOf(getItem(position - 1).getFirstLetter()) : "";
-            String nextContactFirstLetter = position < getItemCount() - 2 ? String.valueOf(getItem(position + 1).getFirstLetter()) : "";
+            String previousContactFirstLetter = position > 0 && getItem(position - 1) != null ? String.valueOf(getItem(position - 1).getFirstLetter()) : "";
+            String nextContactFirstLetter = position < getItemCount() - 2 && getItem(position + 1) != null ? String.valueOf(getItem(position + 1).getFirstLetter()) : "";
             ((ContactsViewHolder) holder).bindItem(contact, previousContactFirstLetter, nextContactFirstLetter, getItemCount());
         }
         else {

@@ -16,6 +16,9 @@ import java.util.List;
 @Dao
 public interface ContactsDao {
 
+    public static final String LOCAL = "LOCAL";
+    public static final String REMOTE = "REMOTE";
+
     @Query("SELECT * FROM Contacts ORDER BY full_name ASC")
     public PagingSource<Integer, Contact> getAllContacts();
 
@@ -45,4 +48,7 @@ public interface ContactsDao {
 
     @Query("DELETE FROM Contacts")
     public void removeAll();
+
+    @Query("DELETE FROM Contacts WHERE id NOT IN(:ids) AND Source = :source")
+    public void removeIfNotInIds(String source, List<String> ids);
 }

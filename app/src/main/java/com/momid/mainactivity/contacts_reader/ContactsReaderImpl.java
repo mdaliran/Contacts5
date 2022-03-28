@@ -14,9 +14,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
 
+import com.google.common.collect.Lists;
 import com.momid.mainactivity.contacts.Contact;
 import com.momid.mainactivity.contacts.ContactsRepository;
 import com.momid.mainactivity.PermissionHelper;
+import com.momid.mainactivity.database.ContactsDao;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -31,7 +33,6 @@ public class ContactsReaderImpl implements ContactsReader {
     private final Context context;
     private final ContactsRepository repository;
     private final PermissionHelper permissionHelper;
-//    private List<Contact> remoteContacts = new ArrayList<>();
 
     @Inject
     public ContactsReaderImpl(@ApplicationContext Context context, ContactsRepository repository, PermissionHelper permissionHelper) {
@@ -40,43 +41,22 @@ public class ContactsReaderImpl implements ContactsReader {
         this.permissionHelper = permissionHelper;
     }
 
-//    public ContactsReaderImpl withRemoteContacts(List<Contact> remoteContacts) {
-//
-//        this.remoteContacts.clear();
-//        this.remoteContacts.addAll(remoteContacts);
-//
-//        return this;
-//    }
-
     @Override
     public void startToRead(ContactsReaderListener contactsReaderListener) {
 
         new Thread(() -> {
 
-            int contactsCount = repository.getContactsCount1();
+            if (permissionHelper.hasContactsPermission()) {
+                runOnUiThread(contactsReaderListener::readStart);
 
-            if (contactsCount > 0) {
-                runOnUiThread(contactsReaderListener::alreadyStored);
-                repository.insertContactsToDatabase(startToGetContactsOnDevice());
-//                if (!remoteContacts.isEmpty()) {
-//                    repository.insertContactsToDatabase(remoteContacts);
-//                }
+                List<Contact> contacts = startToGetContactsOnDevice();
+                repository.insertContactsToDatabase(contacts);
+                repository.removeUnnesseceryContacts(ContactsDao.LOCAL, Lists.transform(contacts, Contact::getId));
+
+                runOnUiThread(contactsReaderListener::readEnd);
             }
             else {
-                if (permissionHelper.hasContactsPermission()) {
-
-                    runOnUiThread(contactsReaderListener::readStart);
-
-                    repository.insertContactsToDatabase(startToGetContactsOnDevice());
-//                    if (!remoteContacts.isEmpty()) {
-//                        repository.insertContactsToDatabase(remoteContacts);
-//                    }
-
-                    runOnUiThread(contactsReaderListener::readEnd);
-                }
-                else {
-                    runOnUiThread(contactsReaderListener::permissionNeeded);
-                }
+                runOnUiThread(contactsReaderListener::permissionNeeded);
             }
         }).start();
     }

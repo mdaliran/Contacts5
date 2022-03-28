@@ -25,4 +25,6 @@ public interface ContactsRepository {
     void getRemoteContacts(DataCallback<List<Contact>> callback);
 
     void removeAllContacts();
+
+    void removeUnnesseceryContacts(String source, List<String> ids);
 }
